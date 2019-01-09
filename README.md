@@ -11,3 +11,6 @@ https://medium.freecodecamp.org/how-to-master-async-await-with-this-real-world-e
 
 ## Published
 Decembe 25, 2018
+
+TODO:
+minute: 20:20
