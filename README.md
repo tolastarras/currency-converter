@@ -1,5 +1,9 @@
 # currency-converter
 
+## APIs
+https://currencylayer.com
+http://restcountries.eu/
+
 ## Video Tutorial
 https://www.youtube.com/watch?v=mlb525FgU3k
 
