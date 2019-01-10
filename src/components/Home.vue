@@ -14,7 +14,7 @@
             </div>
             <div class="col">
               <select class="form-control">
-                <option v-for="currency in currencies" :key="currency">{{ currency }}</option>
+                <option v-for="currency in sortedCurrencies" :key="currency.code">{{ currency.name }}</option>
               </select>
             </div>
           </div>
@@ -24,8 +24,7 @@
             </div>
             <div class="col">
               <select class="form-control">
-                <option selected>Choose...</option>
-                <option>...</option>
+                <option v-for="currency in sortedCurrencies" :key="currency.code">{{ currency.name }}</option>
               </select>
             </div>
           </div>
@@ -43,34 +42,51 @@ export default {
   name: 'home',
   data () {
     return {
+      currencies: [],
+      fromCurrency: 'USD',
+      toCurrency: 'EUR',
       message: ''
     }
   },
   mounted () {
+    this.loadCurrencies().then(currencies => {
+      this.currencies = currencies
+    })
+
     this.convertCurrency('USD', 'EUR', 10).then(message => {
       this.message = message
     })
   },
-  asyncComputed: {
-    async currencies () {
-      let currencies = []
-      await this.loadCurrencies().then(records => {
-        records.map(record => {
-          let name = record.currencies[0].name
-          if (name && currencies.indexOf(name) === -1) {
-            currencies.push(name)
-          }
-        })
+  computed: {
+    sortedCurrencies () {
+      return this.currencies.sort((a, b) => {
+        return a.name < b.name ? -1 : 1
       })
-
-      return currencies
     }
   },
   methods: {
     async loadCurrencies () {
       if (!localStorage.getItem('currencies')) {
         const response = await this.$http.get('https://restcountries.eu/rest/v2/all?fields=currencies')
-        localStorage.setItem('currencies', JSON.stringify(response.data))
+        const elements = []
+
+        // response data
+        response.data.map(({ currencies }) => {
+          // currencies array
+          currencies.map(currency => {
+            // discard currencies with empty or invalid codes
+            if (currency.code && currency.code !== '(none)') {
+              // discard duplicates
+              let hasCurrency = elements.find(element => element.code === currency.code)
+
+              if (!hasCurrency) {
+                elements.push(currency)
+              }
+            }
+          })
+        })
+
+        localStorage.setItem('currencies', JSON.stringify(elements))
       }
 
       return JSON.parse(localStorage.getItem('currencies'))
