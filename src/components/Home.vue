@@ -1,20 +1,20 @@
 <template>
   <div class="container text-center">
     <h1>Currency Converter</h1>
+    <hr>
     <div class="content row">
       <div class="col">
-        <h3>1 United States Dollar equals</h3>
+        <h4>1 United States Dollar equals</h4>
         <h1>0.86 Euro</h1>
         Jan 9, 3:22AM EST
-        <form>
+        <form class="mt-4">
           <div class="form-row">
             <div class="col">
               <input type="text" class="form-control" placeholder="Amount">
             </div>
             <div class="col">
-              <select id="inputState" class="form-control">
-                <option selected>Choose...</option>
-                <option>...</option>
+              <select class="form-control">
+                <option v-for="currency in currencies" :key="currency">{{ currency }}</option>
               </select>
             </div>
           </div>
@@ -23,7 +23,7 @@
               <input type="text" class="form-control" placeholder="Amount">
             </div>
             <div class="col">
-              <select id="inputState" class="form-control">
+              <select class="form-control">
                 <option selected>Choose...</option>
                 <option>...</option>
               </select>
@@ -46,14 +46,34 @@ export default {
       message: ''
     }
   },
-  created () {
+  mounted () {
     this.convertCurrency('USD', 'EUR', 10).then(message => {
       this.message = message
     })
   },
-  methods: {
-    getCurrencies () {
+  asyncComputed: {
+    async currencies () {
+      let currencies = []
+      await this.loadCurrencies().then(records => {
+        records.map(record => {
+          let name = record.currencies[0].name
+          if (name && currencies.indexOf(name) === -1) {
+            currencies.push(name)
+          }
+        })
+      })
 
+      return currencies
+    }
+  },
+  methods: {
+    async loadCurrencies () {
+      if (!localStorage.getItem('currencies')) {
+        const response = await this.$http.get('https://restcountries.eu/rest/v2/all?fields=currencies')
+        localStorage.setItem('currencies', JSON.stringify(response.data))
+      }
+
+      return JSON.parse(localStorage.getItem('currencies'))
     },
     getExchangeRate (fromCurrency, toCurrency) {
       const API_KEY = process.env.VUE_APP_CURRENCY_LAYER_KEY
