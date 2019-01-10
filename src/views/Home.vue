@@ -4,17 +4,17 @@
     <hr>
     <div class="content row">
       <div class="col">
-        <h4>1 United States Dollar equals</h4>
-        <h1>0.86 Euro</h1>
+        <h4>{{ fromCurrencyAmount }} {{ currencyName(fromCurrency) }} equals</h4>
+        <h1>1.23 {{ currencyName(toCurrency) }}</h1>
         Jan 9, 3:22AM EST
         <form class="mt-4">
           <div class="form-row">
             <div class="col">
-              <input type="text" class="form-control" placeholder="Amount">
+              <input type="text" class="form-control" placeholder="Amount" v-model="fromCurrencyAmount">
             </div>
             <div class="col">
-              <select class="form-control">
-                <option v-for="currency in sortedCurrencies" :key="currency.code">{{ currency.name }}</option>
+              <select class="from-currency-js form-control" @change="handleChange('fromCurrency', $event)">
+                <option v-for="currency in sortedCurrencies" :key="currency.code" :selected="selectedOption(currency.code, 'fromCurrency')" :value="currency.code">{{ currency.name }}</option>
               </select>
             </div>
           </div>
@@ -23,9 +23,7 @@
               <input type="text" class="form-control" placeholder="Amount">
             </div>
             <div class="col">
-              <select class="form-control">
-                <option v-for="currency in sortedCurrencies" :key="currency.code">{{ currency.name }}</option>
-              </select>
+              <select-box />
             </div>
           </div>
         </form>
@@ -38,12 +36,18 @@
 </template>
 
 <script>
+import SelectBox from '@/components/SelectBox'
+
 export default {
   name: 'home',
+  components: {
+    SelectBox
+  },
   data () {
     return {
       currencies: [],
       fromCurrency: 'USD',
+      fromCurrencyAmount: 1,
       toCurrency: 'EUR',
       message: ''
     }
@@ -59,9 +63,8 @@ export default {
   },
   computed: {
     sortedCurrencies () {
-      return this.currencies.sort((a, b) => {
-        return a.name < b.name ? -1 : 1
-      })
+      let items = this.currencies
+      return items.sort((a, b) => a.name < b.name ? -1 : 1)
     }
   },
   methods: {
@@ -107,6 +110,22 @@ export default {
       const convertedAmount = (amount * exchangeRate).toFixed(2)
 
       return `${amount} ${fromCurrency} is worth ${convertedAmount} ${toCurrency}. You can use these in the following countries: ${countries}`
+    },
+    selectedOption (code, type) {
+      return code === (type === 'fromCurrency' ? this.fromCurrency : this.toCurrency)
+    },
+    currencyName (code) {
+      let currency = this.currencies.filter(currency => currency.code === code)
+
+      // wait for currency to load
+      if (!currency.length) return
+
+      return currency.pop().name
+    },
+    handleChange (type, e) {
+      console.log('TYPE', type)
+      console.log('EVENT', e.target.value)
+      this.$$type = e.target.value
     }
   }
 }
