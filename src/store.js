@@ -10,7 +10,10 @@ export default new Vuex.Store({
     currencies: []
   },
   mutations: {
-    setCurrency (state, payload) { state.fromCurrency = payload },
+    setFromCurrency (state, payload) {
+      console.log('here ...', payload)
+      state.fromCurrency = payload
+    },
     setToCurrency (state, payload) { state.toCurrency = payload },
     setCurrencies (state, payload) {
       state.currencies = payload
@@ -22,6 +25,9 @@ export default new Vuex.Store({
       // find currency in array
       // const currencyObj = state.currencies.find(item => item.name === currency.name)
       commit('setCurrencies', payload)
+    },
+    updateCurrency (context, payload) {
+      console.log('here', payload)
     }
   },
   getters: {

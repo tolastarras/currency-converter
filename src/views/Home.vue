@@ -62,7 +62,6 @@ export default {
     })
   },
   computed: {
-    ...mapState(['fromCurrency']),
     sortedCurrencies () {
       let items = this.currencies
       return items.sort((a, b) => a.name < b.name ? -1 : 1)
