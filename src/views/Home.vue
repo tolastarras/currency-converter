@@ -5,26 +5,11 @@
     <div class="content row">
       <div class="col">
         <message-header />
-        <form class="mt-4">
-          <!-- <div class="form-row">
-            <div class="col">
-              <input type="text" class="form-control" placeholder="Amount" v-model="fromCurrencyAmount">
-            </div>
-            <div class="col">
-              <select class="from-currency-js form-control" @change="handleChange('fromCurrency', $event)">
-                <option v-for="currency in sortedCurrencies" :key="currency.code" :selected="selectedOption(currency.code, 'fromCurrency')" :value="currency.code">{{ currency.name }}</option>
-              </select>
-            </div>
-          </div> -->
-          <div class="form-row mt-2">
-            <div class="col">
-              <input type="text" class="form-control" placeholder="Amount">
-            </div>
-            <div class="col">
-              <select-box />
-            </div>
+        <div class="row">
+          <div class="col col-md-8 offset-md-2">
+            <currency-controllers />
           </div>
-        </form>
+        </div>
       </div>
     </div>
     <div class="pt-5">
@@ -34,21 +19,19 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import SelectBox from '@/components/SelectBox'
+import CurrencyControllers from '@/components/CurrencyControllers'
 import MessageHeader from '@/components/MessageHeader'
 
 export default {
   name: 'home',
   components: {
-    SelectBox,
+    CurrencyControllers,
     MessageHeader
   },
   data () {
     return {
       currencies: [],
       fromCurrencyAmount: 1,
-      toCurrency: 'EUR',
       message: ''
     }
   },
