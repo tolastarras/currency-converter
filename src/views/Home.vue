@@ -4,11 +4,9 @@
     <hr>
     <div class="content row">
       <div class="col">
-        <h4>{{ fromCurrencyAmount }} {{ currencyName(fromCurrency) }} equals</h4>
-        <h1>1.23 {{ currencyName(toCurrency) }}</h1>
-        Jan 9, 3:22AM EST
+        <message-header />
         <form class="mt-4">
-          <div class="form-row">
+          <!-- <div class="form-row">
             <div class="col">
               <input type="text" class="form-control" placeholder="Amount" v-model="fromCurrencyAmount">
             </div>
@@ -17,7 +15,7 @@
                 <option v-for="currency in sortedCurrencies" :key="currency.code" :selected="selectedOption(currency.code, 'fromCurrency')" :value="currency.code">{{ currency.name }}</option>
               </select>
             </div>
-          </div>
+          </div> -->
           <div class="form-row mt-2">
             <div class="col">
               <input type="text" class="form-control" placeholder="Amount">
@@ -36,17 +34,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import SelectBox from '@/components/SelectBox'
+import MessageHeader from '@/components/MessageHeader'
 
 export default {
   name: 'home',
   components: {
-    SelectBox
+    SelectBox,
+    MessageHeader
   },
   data () {
     return {
       currencies: [],
-      fromCurrency: 'USD',
       fromCurrencyAmount: 1,
       toCurrency: 'EUR',
       message: ''
@@ -54,7 +54,7 @@ export default {
   },
   mounted () {
     this.loadCurrencies().then(currencies => {
-      this.currencies = currencies
+      this.$store.dispatch('pushCurrencies', currencies)
     })
 
     this.convertCurrency('USD', 'EUR', 10).then(message => {
@@ -62,12 +62,14 @@ export default {
     })
   },
   computed: {
+    ...mapState(['fromCurrency']),
     sortedCurrencies () {
       let items = this.currencies
       return items.sort((a, b) => a.name < b.name ? -1 : 1)
     }
   },
   methods: {
+    // TODO: load currencies from store, if not available from localstorage, else from api
     async loadCurrencies () {
       if (!localStorage.getItem('currencies')) {
         const response = await this.$http.get('https://restcountries.eu/rest/v2/all?fields=currencies')
@@ -113,20 +115,15 @@ export default {
     },
     selectedOption (code, type) {
       return code === (type === 'fromCurrency' ? this.fromCurrency : this.toCurrency)
-    },
-    currencyName (code) {
-      let currency = this.currencies.filter(currency => currency.code === code)
-
-      // wait for currency to load
-      if (!currency.length) return
-
-      return currency.pop().name
-    },
-    handleChange (type, e) {
-      console.log('TYPE', type)
-      console.log('EVENT', e.target.value)
-      this.$$type = e.target.value
     }
+    // currencyName (code) {
+    //   let currency = this.currencies.filter(currency => currency.code === code)
+
+    //   // wait for currency to load
+    //   if (!currency.length) return
+
+    //   return currency.pop().name
+    // }
   }
 }
 </script>
