@@ -5,6 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    fromCurrencyAmount: 1,
+    toCurrencyAmount: 0.86,
     fromCurrency: 'USD',
     toCurrency: 'EUR',
     currencies: []
@@ -13,6 +15,10 @@ export default new Vuex.Store({
     setFromCurrency (state, payload) {
       console.log('here ...', payload)
       state.fromCurrency = payload
+    },
+    setFromCurrencyAmount (state, amount) {
+      console.log('set from currency amount ...')
+      state.fromCurrencyAmount = amount
     },
     setToCurrency (state, payload) {
       console.log('there...')
@@ -30,8 +36,9 @@ export default new Vuex.Store({
       // const currencyObj = state.currencies.find(item => item.name === currency.name)
       commit('setCurrencies', payload)
     },
-    updateCurrency (context, payload) {
-      console.log('here', payload)
+    updateFromCurrencyAmount ({ state, commit }, amount) {
+      console.log('update currency amount ...')
+      commit('setFromCurrencyAmount', amount)
     }
   },
   getters: {
