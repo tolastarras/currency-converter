@@ -94,18 +94,7 @@ export default {
       const convertedAmount = (amount * exchangeRate).toFixed(2)
 
       return `${amount} ${fromCurrency} is worth ${convertedAmount} ${toCurrency}. You can use these in the following countries: ${countries}`
-    },
-    selectedOption (code, type) {
-      return code === (type === 'fromCurrency' ? this.fromCurrency : this.toCurrency)
     }
-    // currencyName (code) {
-    //   let currency = this.currencies.filter(currency => currency.code === code)
-
-    //   // wait for currency to load
-    //   if (!currency.length) return
-
-    //   return currency.pop().name
-    // }
   }
 }
 </script>
