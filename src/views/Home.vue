@@ -36,13 +36,15 @@ export default {
     }
   },
   mounted () {
+    this.message = 'Countries that accept this currency'
+
     this.loadCurrencies().then(currencies => {
       this.$store.dispatch('pushCurrencies', currencies)
     })
 
-    this.convertCurrency('USD', 'EUR', 10).then(message => {
-      this.message = message
-    })
+    // this.convertCurrency('USD', 'EUR', 10).then(message => {
+    //   this.message = message
+    // })
   },
   computed: {
     sortedCurrencies () {
@@ -77,28 +79,7 @@ export default {
       }
 
       return JSON.parse(localStorage.getItem('currencies'))
-    },
-    getExchangeRate (fromCurrency, toCurrency) {
-      const API_KEY = process.env.VUE_APP_CURRENCY_LAYER_KEY
-      let url = `http://apilayer.net/api/live?access_key=${API_KEY}&currencies=${toCurrency}&source=${fromCurrency}&format=1`
-
-      return this.$http.get(url).then(response => response.data.quotes[`${fromCurrency}${toCurrency}`])
-    },
-    async getCountries (toCurrency) {
-      const response = await this.$http.get(`https://restcountries.eu/rest/v2/currency/${toCurrency}`)
-      return response.data.map(country => country.name)
-    },
-    async convertCurrency (fromCurrency, toCurrency, amount) {
-      const exchangeRate = await this.getExchangeRate(fromCurrency, toCurrency)
-      const countries = await this.getCountries(toCurrency)
-      const convertedAmount = (amount * exchangeRate).toFixed(2)
-
-      return `${amount} ${fromCurrency} is worth ${convertedAmount} ${toCurrency}. You can use these in the following countries: ${countries}`
     }
   }
 }
 </script>
-
-<style scoped lang="scss">
-
-</style>

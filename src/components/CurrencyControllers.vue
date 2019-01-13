@@ -2,7 +2,7 @@
   <form class="mt-4">
     <div class="from-currency-js form-row mb-2">
       <div class="col">
-        <input @change="handleInputChange" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" v-model="fromCurrencyAmount">
+        <input @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrencyAmount">
       </div>
       <div class="col">
         <select class="form-control" @change="handleSelectChange">
@@ -28,27 +28,40 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
   methods: {
+    ...mapActions(['updateFromCurrencyAmount']),
     handleInputChange ({ target }) {
-      console.log('input change ...', target.value)
-      // console.log('TYPE:', type)
-      // console.log('TARGET:', target.value)
+      // TODO: only allow numbers and a single decimal point
+      // let regex = /^\d+(\\.{1}\d+)?$/
+      // if (this.fromCurrencyAmount.toString().match(regex)) {
+      // if (!regex.test(e.key)) {//} && e.key !== 'Backspace') {
+      //   e.preventDefault()
+      // }
+
+      // method name based on select box selected
+      let method = (this.isFromCurrency(target) ? 'SET_FROM_CURRENCY_AMOUNT' : 'SET_TO_CURRENCY_AMOUNT')
+
+      this.$store.commit(method, target.value)
+      this.getExchangeRate.then(response => console.log(response))
     },
     handleSelectChange ({ target }) {
-      // console.log('TYPE:', type)
-      // console.log('VAL:', target.value)
-      let isFromCurrency = target.closest('.form-row').classList.contains('from-currency-js')
-      let method = (isFromCurrency ? 'SET_FROM_CURRENCY' : 'SET_TO_CURRENCY')
-      this.$store.commit(method, event.target.value)
+      // method name based on select box selected
+      let method = (this.isFromCurrency(target) ? 'SET_FROM_CURRENCY' : 'SET_TO_CURRENCY')
+
+      // update state
+      this.$store.commit(method, target.value)
+    },
+    isFromCurrency (target) {
+      // find parent class of select option
+      return target.closest('.form-row').classList.contains('from-currency-js')
     }
   },
   computed: {
-    ...mapState(['fromCurrency', 'fromCurrencyAmount', 'toCurrency', 'toCurrencyAmount', 'currencies']),
-    ...mapActions(['updateFromCurrencyAmount'])
-    // ...mapMutations([])
+    ...mapState(['fromCurrency', 'toCurrency', 'fromCurrencyAmount', 'toCurrencyAmount', 'currencies']),
+    ...mapGetters(['getExchangeRate', 'currencyName'])
   }
 }
 </script>
