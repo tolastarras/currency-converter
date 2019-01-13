@@ -12,17 +12,15 @@ export default new Vuex.Store({
     currencies: []
   },
   mutations: {
-    setFromCurrency (state, payload) {
-      console.log('here ...', payload)
+    SET_FROM_CURRENCY (state, payload) {
       state.fromCurrency = payload
+    },
+    SET_TO_CURRENCY (state, payload) {
+      state.toCurrency = payload
     },
     setFromCurrencyAmount (state, amount) {
       console.log('set from currency amount ...')
       state.fromCurrencyAmount = amount
-    },
-    setToCurrency (state, payload) {
-      console.log('there...')
-      state.toCurrency = payload
     },
     setCurrencies (state, items) {
       // sort currencies in asc order

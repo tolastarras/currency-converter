@@ -11,7 +11,7 @@
           </option>
         </select>
       </div>
-    </div>    
+    </div>
     <div class="to-currency-js form-row">
       <div class="col">
         <input @change="handleInputChange" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" v-model="toCurrencyAmount">
@@ -34,19 +34,21 @@ export default {
   methods: {
     handleInputChange ({ target }) {
       console.log('input change ...', target.value)
-      this.updateFromCurrencyAmount(target.value)
       // console.log('TYPE:', type)
       // console.log('TARGET:', target.value)
     },
-    handleSelectChange () {
-      console.log('TYPE:', 'type')
-      // let method = (type ==='from-currency' ? 'setFromCurrency' : 'setToCurrency')
-      // this.$store.commit(method, event.target.value)
-    }    
+    handleSelectChange ({ target }) {
+      // console.log('TYPE:', type)
+      // console.log('VAL:', target.value)
+      let isFromCurrency = target.closest('.form-row').classList.contains('from-currency-js')
+      let method = (isFromCurrency ? 'SET_FROM_CURRENCY' : 'SET_TO_CURRENCY')
+      this.$store.commit(method, event.target.value)
+    }
   },
   computed: {
     ...mapState(['fromCurrency', 'fromCurrencyAmount', 'toCurrency', 'toCurrencyAmount', 'currencies']),
     ...mapActions(['updateFromCurrencyAmount'])
-  }  
+    // ...mapMutations([])
+  }
 }
 </script>
