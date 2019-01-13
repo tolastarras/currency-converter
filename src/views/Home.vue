@@ -41,10 +41,6 @@ export default {
     this.loadCurrencies().then(currencies => {
       this.$store.dispatch('pushCurrencies', currencies)
     })
-
-    // this.convertCurrency('USD', 'EUR', 10).then(message => {
-    //   this.message = message
-    // })
   },
   computed: {
     sortedCurrencies () {
@@ -56,6 +52,7 @@ export default {
     // TODO: load currencies from store, if not available from localstorage, else from api
     async loadCurrencies () {
       if (!localStorage.getItem('currencies')) {
+        console.log('rest call to api ...')
         const response = await this.$http.get('https://restcountries.eu/rest/v2/all?fields=currencies')
         const elements = []
 

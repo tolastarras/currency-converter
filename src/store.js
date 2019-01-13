@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Axios from 'axios'
+// import Axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -40,12 +40,16 @@ export default new Vuex.Store({
       commit('SET_FROM_CURRENCY_AMOUNT', amount)
       dispatch('convertCurrency')
     },
-    async convertCurrency ( state, getters ) {
+    async convertCurrency ({ state, commit, getters }) {
       console.log('convert currency ...')
       // const abc = await getters.getExchangeRate()
       // const exchangeRate = await getters.getExchangeRate.then(response => console.log(response))
       // // const countries = await this.getCountries(state.toCurrency)
-      // const convertedAmount = (state.fromCurrencyAmount * exchangeRate).toFixed(2)
+      let exchangeRate = await getters.getExchangeRate
+      console.log('XR:', exchangeRate)
+
+      const convertedAmount = (state.fromCurrencyAmount * exchangeRate).toFixed(2)
+      state.toCurrencyAmount = convertedAmount
 
       // return `${state.fromCurrencyAmount} ${state.fromCurrency} is worth ${convertedAmount} ${state.toCurrency}.`
       // // You can use these in the following countries: ${countries}`
@@ -64,11 +68,12 @@ export default new Vuex.Store({
     },
     async getExchangeRate (state) {
       console.log('get exchange rate...')
-      const API_KEY = process.env.VUE_APP_CURRENCY_LAYER_KEY
-      let url = `http://apilayer.net/api/live?access_key=${API_KEY}&currencies=${state.toCurrency}&source=${state.fromCurrency}&format=1`
+      // const API_KEY = process.env.VUE_APP_CURRENCY_LAYER_KEY
+      // let url = `http://apilayer.net/api/live?access_key=${API_KEY}&currencies=${state.toCurrency}&source=${state.fromCurrency}&format=1`
 
-      const response = await Axios.get(url)
-      return response.data.quotes[`${state.fromCurrency}${state.toCurrency}`]
+      // const response = await Axios.get(url)
+      // return response.data.quotes[`${state.fromCurrency}${state.toCurrency}`]
+      return 0.86
     },
     async getCountries (toCurrency) {
       // const response = await this.$http.get(`https://restcountries.eu/rest/v2/currency/${toCurrency}`)
