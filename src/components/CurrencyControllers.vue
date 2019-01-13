@@ -44,8 +44,10 @@ export default {
       // method name based on select box selected
       let method = (this.isFromCurrency(target) ? 'SET_FROM_CURRENCY_AMOUNT' : 'SET_TO_CURRENCY_AMOUNT')
 
-      this.$store.commit(method, target.value)
-      this.getExchangeRate.then(response => console.log(response))
+      // this.$store.commit(method, target.value)
+      this.$store.dispatch('updateFromCurrencyAmount', target.value)
+      // this.convertCurrency().then(response => console.log('RESPONSE:', response))
+      // this.getExchangeRate.then(response => console.log(response))
     },
     handleSelectChange ({ target }) {
       // method name based on select box selected

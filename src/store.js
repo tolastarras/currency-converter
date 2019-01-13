@@ -28,14 +28,6 @@ export default new Vuex.Store({
     },
     pushCurrency (state, currency) {
       state.currencies.push(currency)
-    },
-    async convertCurrency (state) {
-      const exchangeRate = await this.getExchangeRate()
-      // const countries = await this.getCountries(state.toCurrency)
-      const convertedAmount = (state.fromCurrencyAmount * exchangeRate).toFixed(2)
-
-      return `${state.fromCurrencyAmount} ${state.fromCurrency} is worth ${convertedAmount} ${state.toCurrency}.`
-      // You can use these in the following countries: ${countries}`
     }
   },
   actions: {
@@ -44,8 +36,19 @@ export default new Vuex.Store({
       // const currencyObj = state.currencies.find(item => item.name === currency.name)
       commit('setCurrencies', payload)
     },
-    updateFromCurrencyAmount ({ state, commit }, amount) {
-      commit('setFromCurrencyAmount', amount)
+    updateFromCurrencyAmount ({ state, commit, dispatch }, amount) {
+      commit('SET_FROM_CURRENCY_AMOUNT', amount)
+      dispatch('convertCurrency')
+    },
+    async convertCurrency ( state, getters ) {
+      console.log('convert currency ...')
+      // const abc = await getters.getExchangeRate()
+      // const exchangeRate = await getters.getExchangeRate.then(response => console.log(response))
+      // // const countries = await this.getCountries(state.toCurrency)
+      // const convertedAmount = (state.fromCurrencyAmount * exchangeRate).toFixed(2)
+
+      // return `${state.fromCurrencyAmount} ${state.fromCurrency} is worth ${convertedAmount} ${state.toCurrency}.`
+      // // You can use these in the following countries: ${countries}`
     }
   },
   getters: {
@@ -60,6 +63,7 @@ export default new Vuex.Store({
       return currency.pop().name
     },
     async getExchangeRate (state) {
+      console.log('get exchange rate...')
       const API_KEY = process.env.VUE_APP_CURRENCY_LAYER_KEY
       let url = `http://apilayer.net/api/live?access_key=${API_KEY}&currencies=${state.toCurrency}&source=${state.fromCurrency}&format=1`
 
