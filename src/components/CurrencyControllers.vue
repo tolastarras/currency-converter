@@ -32,7 +32,7 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
   methods: {
-    ...mapActions(['updateFromCurrencyAmount']),
+    ...mapActions(['updateFromCurrencyAmount', 'updateToCurrencyAmount']),
     handleInputChange ({ target }) {
       // TODO: only allow numbers and a single decimal point
       // let regex = /^\d+(\\.{1}\d+)?$/
@@ -42,19 +42,19 @@ export default {
       // }
 
       // method name based on select box selected
-      // let method = (this.isFromCurrency(target) ? 'SET_FROM_CURRENCY_AMOUNT' : 'SET_TO_CURRENCY_AMOUNT')
+      let method = (this.isFromCurrency(target) ? 'updateFromCurrencyAmount' : 'updateToCurrencyAmount')
 
       // this.$store.commit(method, target.value)
-      this.$store.dispatch('updateFromCurrencyAmount', target.value)
+      this.$store.dispatch(method, target.value)
       // this.convertCurrency().then(response => console.log('RESPONSE:', response))
       // this.getExchangeRate.then(response => console.log(response))
     },
     handleSelectChange ({ target }) {
       // method name based on select box selected
-      let method = (this.isFromCurrency(target) ? 'SET_FROM_CURRENCY' : 'SET_TO_CURRENCY')
+      let method = (this.isFromCurrency(target) ? 'updateFromCurrency' : 'updateToCurrency')
 
       // update state
-      this.$store.commit(method, target.value)
+      this.$store.dispatch(method, target.value)
     },
     isFromCurrency (target) {
       // find parent class of select option
