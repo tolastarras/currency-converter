@@ -10,7 +10,9 @@ https://www.youtube.com/watch?v=mlb525FgU3k
 https://medium.freecodecamp.org/how-to-master-async-await-with-this-real-world-example-19107e7558ad
 
 ## Published
-Decembe 25, 2018
+December 25, 2018
 
 TODO:
-minute: 20:20
+1. country flags in select box
+2. fromCurrencyAmount text box does not update toCurrencyAmount
+3. Display countries that accept the selected currency

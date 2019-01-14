@@ -24,7 +24,7 @@ export default new Vuex.Store({
     },
     SET_TO_CURRENCY_AMOUNT (state, amount) {
       state.toCurrencyAmount = amount
-    },    
+    },
     SET_CURRENCIES (state, items) {
       // sort currencies in asc order
       state.currencies = items.sort((a, b) => a.name < b.name ? -1 : 1)
@@ -46,7 +46,7 @@ export default new Vuex.Store({
     updateToCurrency ({ commit, dispatch }, code) {
       commit('SET_TO_CURRENCY', code)
       dispatch('convertCurrency')
-    },    
+    },
     updateFromCurrencyAmount ({ commit, dispatch }, amount) {
       commit('SET_FROM_CURRENCY_AMOUNT', amount)
       dispatch('convertCurrency')

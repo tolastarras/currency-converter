@@ -14,7 +14,7 @@ export default {
     ...mapGetters(['currencyName']),
     ...mapState(['fromCurrency', 'toCurrency', 'fromCurrencyAmount', 'toCurrencyAmount']),
     currentDate () {
-      let date = new Date
+      let date = new Date()
 
       let tokens = date.toString().split(' ')
       let timeTokens = tokens[4].split(':')
@@ -23,7 +23,7 @@ export default {
       let hour = timeTokens[0]
 
       // validate hour and ampm values guessed
-      if (timeTokens[0] > 12) { 
+      if (timeTokens[0] > 12) {
         hour = timeTokens[0] - 12
         ampm = 'PM'
       }

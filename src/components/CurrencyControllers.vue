@@ -18,7 +18,7 @@
       </div>
       <div class="col">
         <select class="form-control" @change="handleSelectChange">
-          <option v-for="currency in currencies" :key="currency.code" :value="currency.code" :selected="currency.code === toCurrency">
+          <option data-thumbnail="https://restcountries.eu/data/esp.svg" v-for="currency in currencies" :key="currency.code" :value="currency.code" :selected="currency.code === toCurrency">
             {{ currency.name }}
           </option>
         </select>
