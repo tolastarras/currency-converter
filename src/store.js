@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     fromCurrencyAmount: 1,
-    toCurrencyAmount: 0.86,
+    toCurrencyAmount: 0,
+    exchangeRate: 0,
     fromCurrency: 'USD',
     toCurrency: 'EUR',
     currencies: []
@@ -20,6 +21,7 @@ export default new Vuex.Store({
       state.toCurrency = payload
     },
     SET_FROM_CURRENCY_AMOUNT (state, amount) {
+      console.log('SET_FROM_CURRENCY_AMOUNT:', amount)
       state.fromCurrencyAmount = amount
     },
     SET_TO_CURRENCY_AMOUNT (state, amount) {
@@ -28,6 +30,14 @@ export default new Vuex.Store({
     SET_CURRENCIES (state, items) {
       // sort currencies in asc order
       state.currencies = items.sort((a, b) => a.name < b.name ? -1 : 1)
+    },
+    SET_EXCHANGE_RATE (state, amount) {
+      console.log('AMOUNT:', amount)
+      state.exchangeRate = amount
+      // set toCurrencyAmount at loading
+      if (state.toCurrencyAmount === 0) {
+        state.toCurrencyAmount = amount
+      }
     }
     // pushCurrency (state, currency) {
     //   state.currencies.push(currency)
@@ -40,30 +50,44 @@ export default new Vuex.Store({
       commit('SET_CURRENCIES', payload)
     },
     updateFromCurrency ({ commit, dispatch }, code) {
+      console.log('CODE:', code)
       commit('SET_FROM_CURRENCY', code)
       dispatch('convertCurrency')
     },
     updateToCurrency ({ commit, dispatch }, code) {
+      console.log('CODE:', code)
       commit('SET_TO_CURRENCY', code)
       dispatch('convertCurrency')
     },
     updateFromCurrencyAmount ({ commit, dispatch }, amount) {
+      console.log('AMOUNT:', amount)
       commit('SET_FROM_CURRENCY_AMOUNT', amount)
-      dispatch('convertCurrency')
+      // dispatch('convertCurrency')
     },
     updateToCurrencyAmount ({ commit, dispatch }, amount) {
       commit('SET_TO_CURRENCY_AMOUNT', amount)
       dispatch('convertCurrency')
     },
-    async convertCurrency ({ state, commit, getters }) {
-      console.log('convert currency ...', state.fromCurrency, state.toCurrency, state.fromCurrencyAmount, state.toCurrencyAmount)
-      // const abc = await getters.getExchangeRate()
-      // const exchangeRate = await getters.getExchangeRate.then(response => console.log(response))
-      // // const countries = await this.getCountries(state.toCurrency)
-      let exchangeRate = await getters.getExchangeRate
-      console.log('XR:', exchangeRate)
+    async updateExchangeRate ({ state, commit }) {
+      console.log('UPDATE EXCHANGE RATE:', state.fromCurrency, state.toCurrency, state.fromCurrencyAmount, state.toCurrencyAmount)
+      // const API_KEY = process.env.VUE_APP_CURRENCY_LAYER_KEY
+      // let url = `http://apilayer.net/api/live?access_key=${API_KEY}&currencies=${state.toCurrency}&source=${state.fromCurrency}&format=1`
 
-      const convertedAmount = (state.fromCurrencyAmount * exchangeRate).toFixed(2)
+      // const response = await Axios.get(url)
+      // return response.data.quotes[`${state.fromCurrency}${state.toCurrency}`]
+      // let rate = Math.random() * 5
+
+      commit('SET_EXCHANGE_RATE', (Math.random() * 5).toFixed(2))
+    },
+    async convertCurrency ({ state, commit, actions }) {
+      console.log('convert currency ...', state.fromCurrency, state.toCurrency, state.fromCurrencyAmount, state.toCurrencyAmount)
+      // const abc = await getters.exchangeRate()
+      // const exchangeRate = await getters.eExchangeRate.then(response => console.log(response))
+      // // const countries = await this.getCountries(state.toCurrency)
+      await commit.updateExchangeRate
+      console.log('XR:', state.exchangeRate)
+
+      const convertedAmount = (state.fromCurrencyAmount * state.exchangeRate).toFixed(2)
       state.toCurrencyAmount = convertedAmount
 
       // return `${state.fromCurrencyAmount} ${state.fromCurrency} is worth ${convertedAmount} ${state.toCurrency}.`
@@ -80,15 +104,6 @@ export default new Vuex.Store({
       if (!currency.length) return
 
       return currency.pop().name
-    },
-    async getExchangeRate (state) {
-      console.log('get exchange rate ...', state.fromCurrency, state.toCurrency, state.fromCurrencyAmount, state.toCurrencyAmount)
-      // const API_KEY = process.env.VUE_APP_CURRENCY_LAYER_KEY
-      // let url = `http://apilayer.net/api/live?access_key=${API_KEY}&currencies=${state.toCurrency}&source=${state.fromCurrency}&format=1`
-
-      // const response = await Axios.get(url)
-      // return response.data.quotes[`${state.fromCurrency}${state.toCurrency}`]
-      return Math.random() * 5
     },
     async getCountries (toCurrency) {
       // const response = await this.$http.get(`https://restcountries.eu/rest/v2/currency/${toCurrency}`)

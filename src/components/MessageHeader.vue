@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <h4>{{ fromCurrencyAmount }} {{ currencyName(fromCurrency) }} equals</h4>
-    <h1>{{ toCurrencyAmount }} {{ currencyName(toCurrency) }}</h1>
-    {{ currentDate }}
+    <h5 class="text-primary">1 {{ currencyName(fromCurrency) }} equals</h5>
+    <h1>{{ exchangeRate }} {{ currencyName(toCurrency) }}</h1>
+    <p class="text-muted">{{ currentDate }}</p>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters(['currencyName']),
-    ...mapState(['fromCurrency', 'toCurrency', 'fromCurrencyAmount', 'toCurrencyAmount']),
+    ...mapState(['fromCurrency', 'toCurrency', 'exchangeRate']),
     currentDate () {
       let date = new Date()
 

@@ -43,16 +43,18 @@ export default {
 
       // method name based on select box selected
       let method = (this.isFromCurrency(target) ? 'updateFromCurrencyAmount' : 'updateToCurrencyAmount')
+      console.log('METHOD:', method)
 
       // this.$store.commit(method, target.value)
       this.$store.dispatch(method, target.value)
       // this.convertCurrency().then(response => console.log('RESPONSE:', response))
-      // this.getExchangeRate.then(response => console.log(response))
+      // this.exchangeRate.then(response => console.log(response))
     },
     handleSelectChange ({ target }) {
       // method name based on select box selected
       let method = (this.isFromCurrency(target) ? 'updateFromCurrency' : 'updateToCurrency')
 
+      console.log('METHOD:', method)
       // update state
       this.$store.dispatch(method, target.value)
     },
@@ -62,8 +64,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fromCurrency', 'toCurrency', 'fromCurrencyAmount', 'toCurrencyAmount', 'currencies']),
-    ...mapGetters(['getExchangeRate', 'currencyName'])
+    ...mapState(['fromCurrency', 'toCurrency', 'fromCurrencyAmount', 'toCurrencyAmount', 'currencies', 'exchangeRate']),
+    ...mapGetters(['currencyName'])
   }
 }
 </script>
