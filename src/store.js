@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import Axios from 'axios'
+import Axios from 'axios'
 
 Vue.use(Vuex)
 
@@ -11,7 +11,8 @@ export default new Vuex.Store({
     exchangeRate: 0,
     fromCurrency: 'USD',
     toCurrency: 'EUR',
-    currencies: []
+    currencies: [],
+    error: ''
   },
   mutations: {
     SET_FROM_CURRENCY (state, payload) {
@@ -28,6 +29,7 @@ export default new Vuex.Store({
       state.toCurrencyAmount = amount
     },
     SET_CURRENCIES (state, items) {
+      console.log('set currencies ...')
       // sort currencies in asc order
       state.currencies = items.sort((a, b) => a.name < b.name ? -1 : 1)
     },
@@ -44,11 +46,11 @@ export default new Vuex.Store({
     // }
   },
   actions: {
-    pushCurrencies ({ commit }, payload) {
-      // find currency in array
-      // const currencyObj = state.currencies.find(item => item.name === currency.name)
-      commit('SET_CURRENCIES', payload)
-    },
+    // pushCurrencies ({ commit }, payload) {
+    //   // find currency in array
+    //   // const currencyObj = state.currencies.find(item => item.name === currency.name)
+    //   commit('SET_CURRENCIES', payload)
+    // },
     updateFromCurrency ({ commit, dispatch }, code) {
       console.log('CODE:', code)
       commit('SET_FROM_CURRENCY', code)
@@ -67,6 +69,39 @@ export default new Vuex.Store({
     updateToCurrencyAmount ({ commit, dispatch }, amount) {
       commit('SET_TO_CURRENCY_AMOUNT', amount)
       dispatch('convertCurrency')
+    },
+    async loadCurrencies ({ commit }) {
+      let elements = []
+
+      if (!localStorage.getItem('currencies')) {
+        console.log('loading currencies from API ...')
+
+        // load currencies from api
+        const response = await Axios.get('https://restcountries.eu/rest/v2/all?fields=currencies')
+
+        response.data.map(({ currencies }) => {
+          // currencies array
+          currencies.map(currency => {
+            // discard currencies with empty or invalid codes
+            if (currency.code && currency.code !== '(none)') {
+              // discard duplicates
+              let hasCurrency = elements.find(element => element.code === currency.code)
+
+              if (!hasCurrency) {
+                elements.push(currency)
+              }
+            }
+          })
+        })
+
+        // set local storage so on the next call no api call is required
+        localStorage.setItem('currencies', JSON.stringify(elements))
+      } else {
+        elements = JSON.parse(localStorage.getItem('currencies'))
+      }
+
+      // set store currencies
+      commit('SET_CURRENCIES', elements)
     },
     async updateExchangeRate ({ state, commit }) {
       console.log('UPDATE EXCHANGE RATE:', state.fromCurrency, state.toCurrency, state.fromCurrencyAmount, state.toCurrencyAmount)

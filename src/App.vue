@@ -14,12 +14,10 @@ export default {
     Home
   },
   created () {
-    if (this.exchangeRate === 0) {
-      this.$store.dispatch('updateExchangeRate')
+    if (this.currencies.length === 0) {
+      this.$store.dispatch('loadCurrencies')
     }
   },
-  computed: {
-    ...mapState(['fromCurrencyAmount', 'exchangeRate'])
-  }
+  computed: mapState(['currencies'])
 }
 </script>
