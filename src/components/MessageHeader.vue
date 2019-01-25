@@ -22,7 +22,7 @@ export default {
       let ampm = 'AM'
       let hour = timeTokens[0]
 
-      // validate hour and ampm values guessed
+      // validate hour and ampm values guessed above
       if (timeTokens[0] > 12) {
         hour = timeTokens[0] - 12
         ampm = 'PM'

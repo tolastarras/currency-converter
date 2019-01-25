@@ -61,6 +61,51 @@ export default new Vuex.Store({
         console.log('loading currencies from API ...')
 
         // load currencies from api
+        const response = await Axios.get('https://restcountries.eu/rest/v2/all?fields=name;flag;currencies')
+
+        response.data.map(record => {
+          record.currencies.map(currency => {
+            // initialize additional fields
+            currency = { ...currency, 'countries': [{ name: record.name, flag: record.flag }] }
+            // discard currencies with empty or invalid codes
+            if (currency.code && currency.code !== '(none)') {
+              // discard duplicates
+              let hasCurrency = elements.find(element => {
+                if (element.code === currency.code) {
+                  // add country to currency countries array
+                  element.countries.push({ name: record.name, flag: record.flag })
+
+                  return true
+                }
+
+                return false
+              })
+
+              // currency not in the array yet
+              if (!hasCurrency) {
+                elements.push(currency)
+              }
+            }
+          })
+        })
+
+        // set local storage so on the next call no api call is required
+        localStorage.setItem('currencies', JSON.stringify(elements))
+      } else {
+        elements = JSON.parse(localStorage.getItem('currencies'))
+      }
+
+      // set store currencies
+      commit('SET_CURRENCIES', elements)
+      dispatch('updateExchangeRate')
+    },
+    async loadCurrencies_DEPRECATED ({ commit, dispatch }) {
+      let elements = []
+
+      if (!localStorage.getItem('currencies')) {
+        console.log('loading currencies from API ...')
+
+        // load currencies from api
         const response = await Axios.get('https://restcountries.eu/rest/v2/all?fields=currencies')
 
         response.data.map(({ currencies }) => {
@@ -95,8 +140,8 @@ export default new Vuex.Store({
 
       // const response = await Axios.get(url)
       // return response.data.quotes[`${state.fromCurrency}${state.toCurrency}`]
-      // let rate = Math.random() * 5
 
+      // random decimal for testing purposes
       commit('SET_EXCHANGE_RATE', (Math.random() * 5).toFixed(2))
       // dispatch('convertToCurrency')
     },
@@ -128,6 +173,32 @@ export default new Vuex.Store({
       if (!currency.length) return
 
       return currency.pop().name
+    },
+    currencyFlag: (state) => (code) => {
+      let currency = state.currencies.filter(currency => currency.code === code)
+
+      // wait for currency to load
+      if (!currency.length) return
+
+      // countries array
+      let countries = currency.pop().countries
+      // console.log('COUNTRIES:', countries)
+
+      let index = 0
+      if (code.toLowerCase() === 'usd') {
+        countries.filter((country, i) => {
+          if (country.name === 'United States of America') {
+            index = i
+          }
+        })
+      }
+
+      if (code.toLowerCase() === 'eur') {
+        console.log('EURO >> display european flag ...')
+      }
+      console.log('index: ' + index)
+
+      return countries[index].flag
     },
     async getCountries (toCurrency) {
       // const response = await this.$http.get(`https://restcountries.eu/rest/v2/currency/${toCurrency}`)

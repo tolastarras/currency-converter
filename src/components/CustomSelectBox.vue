@@ -1,10 +1,10 @@
 <template>
   <div class="dropdown">
     <button class="btn btn-select" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <img src="https://restcountries.eu/data/esp.svg">{{ currencyName(fromCurrency) }} <i class="fa fa-caret-down"></i>
+      <img :src="currencyFlag(fromCurrency)">{{ currencyName(fromCurrency) }} <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-      <button @click="handleClick" class="dropdown-item" type="button" v-for="currency in currencies" :key="currency.code" :value="currency.code" :class="currency.code === fromCurrency ? 'selected' : ''"><img src="https://restcountries.eu/data/esp.svg">{{ currency.name }}</button>
+      <button @click="handleClick" class="dropdown-item" type="button" v-for="currency in currencies" :key="currency.code" :value="currency.code" :class="currency.code === fromCurrency ? 'selected' : ''"><img :src="currency.countries[0].flag">{{ currency.name }}</button>
     </div>
   </div>
 
@@ -16,7 +16,7 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
   computed: {
     ...mapState(['currencies', 'fromCurrency', 'toCurrency']),
-    ...mapGetters(['currencyName'])
+    ...mapGetters(['currencyName', 'currencyFlag'])
   },
   methods: {
     ...mapActions(['updateFromCurrency']),
@@ -35,6 +35,7 @@ button {
 
   > img {
     height: 20px;
+    width: 30px;
     margin-top: -6px;
     margin-right: 10px;
   }
