@@ -100,31 +100,19 @@ export default new Vuex.Store({
       commit('SET_EXCHANGE_RATE', (Math.random() * 5).toFixed(2))
       dispatch('convertCurrency')
     },
-    async convertFromCurrency({ state, commit }, amount) {
+    async convertFromCurrency ({ state, commit }, amount) {
       let convertedAmount = amount / state.exchangeRate
 
       commit('SET_FROM_CURRENCY_AMOUNT', convertedAmount)
       commit('SET_TO_CURRENCY_AMOUNT', amount)
     },
-    async convertToCurrency({ state, commit }, amount) {
+    async convertToCurrency ({ state, commit }, amount) {
       let convertedAmount = amount * state.exchangeRate
 
       commit('SET_FROM_CURRENCY_AMOUNT', amount)
       commit('SET_TO_CURRENCY_AMOUNT', convertedAmount)
     },
-    async convertCurrency ({ state, commit, actions }) {
-      // console.log('convert currency ...', state.fromCurrency, state.toCurrency, state.fromCurrencyAmount, state.toCurrencyAmount)
-      // const abc = await getters.exchangeRate()
-      // const exchangeRate = await getters.eExchangeRate.then(response => console.log(response))
-      // // const countries = await this.getCountries(state.toCurrency)
-      
-      // UNCOMMENT START
-      // await commit.updateExchangeRate
-
-      // const convertedAmount = (state.fromCurrencyAmount * state.exchangeRate).toFixed(2)
-      // state.toCurrencyAmount = convertedAmount
-      // UNCOMMENT END
-
+    async currencyCountries ({ state, commit, actions }) {
       // return `${state.fromCurrencyAmount} ${state.fromCurrency} is worth ${convertedAmount} ${state.toCurrency}.`
       // // You can use these in the following countries: ${countries}`
       // dispatch('updateExchangeRate')

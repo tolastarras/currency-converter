@@ -5,9 +5,9 @@
         <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrencyAmount">
       </div>
       <div class="col">
-        <select class="form-control" @change="handleSelectChange">
-          <option v-for="currency in currencies" :key="currency.code" :value="currency.code" :selected="currency.code === fromCurrency">
-            {{ currency.name }}
+        <select class="form-control selectpicker" @change="handleSelectChange">
+          <option v-for="currency in currencies" data-content="<img src='https://restcountries.eu/data/esp.svg'>" :key="currency.code" :value="currency.code" :selected="currency.code === fromCurrency">
+            {{ currency.name }} : {{ currency.symbol }}
           </option>
         </select>
       </div>
@@ -18,8 +18,8 @@
       </div>
       <div class="col">
         <select class="form-control" @change="handleSelectChange">
-          <option data-thumbnail="https://restcountries.eu/data/esp.svg" v-for="currency in currencies" :key="currency.code" :value="currency.code" :selected="currency.code === toCurrency">
-            <img src="https://restcountries.eu/data/esp.svg" >{{ currency.name }}
+          <option v-for="currency in currencies" :key="currency.code" :value="currency.code" :selected="currency.code === toCurrency">
+            {{ currency.name }} : {{ currency.symbol }}
           </option>
         </select>
       </div>
