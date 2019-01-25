@@ -98,7 +98,7 @@ export default new Vuex.Store({
       // let rate = Math.random() * 5
 
       commit('SET_EXCHANGE_RATE', (Math.random() * 5).toFixed(2))
-      dispatch('convertCurrency')
+      // dispatch('convertToCurrency')
     },
     async convertFromCurrency ({ state, commit }, amount) {
       let convertedAmount = amount / state.exchangeRate

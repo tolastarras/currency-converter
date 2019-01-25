@@ -24,13 +24,22 @@
         </select>
       </div>
     </div>
+    <div class="form-row">
+      <div class="col">
+        <custom-select-box />
+      </div>
+    </div>
   </form>
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
+import CustomSelectBox from '@/components/CustomSelectBox'
 
 export default {
+  components: {
+    CustomSelectBox
+  },
   methods: {
     ...mapActions(['updateFromCurrencyAmount', 'updateToCurrencyAmount']),
     handleKeyPress (e) {
