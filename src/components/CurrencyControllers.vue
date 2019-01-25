@@ -14,12 +14,12 @@
     </div>
     <div class="to-currency-js form-row">
       <div class="col">
-        <input @change="handleInputChange" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" v-model="toCurrencyAmount">
+        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" v-model="toCurrencyAmount">
       </div>
       <div class="col">
         <select class="form-control" @change="handleSelectChange">
           <option data-thumbnail="https://restcountries.eu/data/esp.svg" v-for="currency in currencies" :key="currency.code" :value="currency.code" :selected="currency.code === toCurrency">
-            {{ currency.name }}
+            <img src="https://restcountries.eu/data/esp.svg" >{{ currency.name }}
           </option>
         </select>
       </div>
@@ -40,7 +40,10 @@ export default {
   methods: {
     ...mapActions(['updateFromCurrencyAmount', 'updateToCurrencyAmount']),
     handleKeyPress (e) {
-      let input = document.querySelector('.from-currency-js input').value
+      // handle both text boxes
+      let className = '.' + (e.target.parentNode.parentNode.classList.contains('from-currency-js') ? 'from-currency-js' : 'to-currency-js')
+
+      let input = document.querySelector(className + ' input').value
       let validKey = /[\d|.]/
 
       // TODO: try to redo with a regular expression
