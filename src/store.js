@@ -22,11 +22,9 @@ export default new Vuex.Store({
       state.toCurrency = payload
     },
     SET_FROM_CURRENCY_AMOUNT (state, amount) {
-      // console.log('SET_FROM_CURRENCY_AMOUNT:', amount)
       state.fromCurrencyAmount = amount
     },
     SET_TO_CURRENCY_AMOUNT (state, amount) {
-      console.log('here...')
       state.toCurrencyAmount = amount
     },
     SET_CURRENCIES (state, items) {
@@ -34,41 +32,27 @@ export default new Vuex.Store({
       state.currencies = items.sort((a, b) => a.name < b.name ? -1 : 1)
     },
     SET_EXCHANGE_RATE (state, amount) {
-      // console.log('AMOUNT:', amount)
       state.exchangeRate = amount
       // set toCurrencyAmount at loading
       if (state.toCurrencyAmount === 0) {
         state.toCurrencyAmount = amount
       }
     }
-    // pushCurrency (state, currency) {
-    //   state.currencies.push(currency)
-    // }
   },
   actions: {
-    // pushCurrencies ({ commit }, payload) {
-    //   // find currency in array
-    //   // const currencyObj = state.currencies.find(item => item.name === currency.name)
-    //   commit('SET_CURRENCIES', payload)
-    // },
     updateFromCurrency ({ commit, dispatch }, code) {
-      // console.log('CODE:', code)
       commit('SET_FROM_CURRENCY', code)
       dispatch('updateExchangeRate')
     },
     updateToCurrency ({ commit, dispatch }, code) {
-      // console.log('CODE:', code)
       commit('SET_TO_CURRENCY', code)
       dispatch('updateExchangeRate')
     },
     updateFromCurrencyAmount ({ commit, dispatch }, amount) {
-      // console.log('AMOUNT:', amount)
-      commit('SET_FROM_CURRENCY_AMOUNT', amount)
-      dispatch('convertCurrency')
+      dispatch('convertToCurrency', amount)
     },
     updateToCurrencyAmount ({ commit, dispatch }, amount) {
-      commit('SET_TO_CURRENCY_AMOUNT', amount)
-      dispatch('convertCurrency')
+      dispatch('convertFromCurrency', amount)
     },
     async loadCurrencies ({ commit, dispatch }) {
       let elements = []
@@ -116,8 +100,19 @@ export default new Vuex.Store({
       commit('SET_EXCHANGE_RATE', (Math.random() * 5).toFixed(2))
       dispatch('convertCurrency')
     },
+    async convertFromCurrency({ state, commit }, amount) {
+      let convertedAmount = amount / state.exchangeRate
+
+      commit('SET_FROM_CURRENCY_AMOUNT', convertedAmount)
+      commit('SET_TO_CURRENCY_AMOUNT', amount)
+    },
+    async convertToCurrency({ state, commit }, amount) {
+      let convertedAmount = amount * state.exchangeRate
+
+      commit('SET_FROM_CURRENCY_AMOUNT', amount)
+      commit('SET_TO_CURRENCY_AMOUNT', convertedAmount)
+    },
     async convertCurrency ({ state, commit, actions }) {
-      console.log('convert currency')
       // console.log('convert currency ...', state.fromCurrency, state.toCurrency, state.fromCurrencyAmount, state.toCurrencyAmount)
       // const abc = await getters.exchangeRate()
       // const exchangeRate = await getters.eExchangeRate.then(response => console.log(response))

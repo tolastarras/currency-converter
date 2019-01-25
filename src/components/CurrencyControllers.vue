@@ -14,7 +14,7 @@
     </div>
     <div class="to-currency-js form-row">
       <div class="col">
-        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" v-model="toCurrencyAmount">
+        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrencyAmount">
       </div>
       <div class="col">
         <select class="form-control" @change="handleSelectChange">
@@ -31,42 +31,31 @@
 import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
-  data () {
-    return {
-      amount: '',
-      isValidInput: true
-    }
-  },
   methods: {
     ...mapActions(['updateFromCurrencyAmount', 'updateToCurrencyAmount']),
     handleKeyPress (e) {
       // handle both text boxes
-      let className = '.' + (e.target.parentNode.parentNode.classList.contains('from-currency-js') ? 'from-currency-js' : 'to-currency-js')
+      // let className = '.' + (e.target.parentNode.parentNode.classList.contains('from-currency-js') ? 'from-currency-js' : 'to-currency-js')
+      let className = '.' + (this.isFromCurrency(e.target) ? 'from-currency-js' : 'to-currency-js')
 
       let input = document.querySelector(className + ' input').value
       let validKey = /[\d|.]/
 
       // TODO: try to redo with a regular expression
       if (!validKey.test(e.key) || (e.key === '.' && input.includes('.')) || (input.charAt(0) === '0' && input.length === 1 && e.key !== '.')) {
-        this.isValidInput = false
         e.preventDefault()
       }
     },
-    handleInputChange (e) {
-      // method name based on select box selected
-      let method = (this.isFromCurrency(e.target) ? 'updateFromCurrencyAmount' : 'updateToCurrencyAmount')
-      console.log('METHOD:', method)
+    handleInputChange ({ target }) {
+      // method name based on drop box selected
+      let method = (this.isFromCurrency(target) ? 'updateFromCurrencyAmount' : 'updateToCurrencyAmount')
 
-      // this.$store.commit(method, target.value)
-      this.$store.dispatch(method, e.target.value)
-      // this.convertCurrency().then(response => console.log('RESPONSE:', response))
-      // this.exchangeRate.then(response => console.log(response))
+      this.$store.dispatch(method, target.value)
     },
     handleSelectChange ({ target }) {
       // method name based on select box selected
       let method = (this.isFromCurrency(target) ? 'updateFromCurrency' : 'updateToCurrency')
 
-      console.log('METHOD:', method)
       // update state
       this.$store.dispatch(method, target.value)
     },
