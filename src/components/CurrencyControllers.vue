@@ -2,7 +2,7 @@
   <form class="mt-4">
     <div class="from-currency-js form-row mb-2">
       <div class="col">
-        <input @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrencyAmount">
+        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrencyAmount">
       </div>
       <div class="col">
         <select class="form-control" @change="handleSelectChange">
@@ -31,22 +31,31 @@
 import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
+  data () {
+    return {
+      amount: '',
+      isValidInput: true
+    }
+  },
   methods: {
     ...mapActions(['updateFromCurrencyAmount', 'updateToCurrencyAmount']),
-    handleInputChange ({ target }) {
-      // TODO: only allow numbers and a single decimal point
-      // let regex = /^\d+(\\.{1}\d+)?$/
-      // if (this.fromCurrencyAmount.toString().match(regex)) {
-      // if (!regex.test(e.key)) {//} && e.key !== 'Backspace') {
-      //   e.preventDefault()
-      // }
+    handleKeyPress (e) {
+      let input = document.querySelector('.from-currency-js input').value
+      let validKey = /[\d|.]/
 
+      // TODO: try to redo with a regular expression
+      if (!validKey.test(e.key) || (e.key === '.' && input.includes('.')) || (input.charAt(0) === '0' && input.length === 1 && e.key !== '.')) {
+        this.isValidInput = false
+        e.preventDefault()
+      }
+    },
+    handleInputChange (e) {
       // method name based on select box selected
-      let method = (this.isFromCurrency(target) ? 'updateFromCurrencyAmount' : 'updateToCurrencyAmount')
+      let method = (this.isFromCurrency(e.target) ? 'updateFromCurrencyAmount' : 'updateToCurrencyAmount')
       console.log('METHOD:', method)
 
       // this.$store.commit(method, target.value)
-      this.$store.dispatch(method, target.value)
+      this.$store.dispatch(method, e.target.value)
       // this.convertCurrency().then(response => console.log('RESPONSE:', response))
       // this.exchangeRate.then(response => console.log(response))
     },
