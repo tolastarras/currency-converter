@@ -15,7 +15,7 @@ export default {
   },
   created () {
     if (this.currencies.length === 0) {
-      this.$store.dispatch('loadCurrencies')
+      this.$store.dispatch('init')
     }
   },
   computed: mapState(['currencies'])

@@ -1,17 +1,16 @@
 <template>
   <div class="container">
-    <h5 class="text-primary">1 {{ currencyName(fromCurrency) }} equals</h5>
-    <h1>{{ exchangeRate }} {{ currencyName(toCurrency) }}</h1>
+    <h5 class="text-primary">1 {{ fromCurrency.name }} equals</h5>
+    <h1>{{ exchangeRate }} {{ toCurrency.name }}</h1>
     <p class="text-muted">{{ currentDate }}</p>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapGetters(['currencyName']),
     ...mapState(['fromCurrency', 'toCurrency', 'exchangeRate']),
     currentDate () {
       let date = new Date()

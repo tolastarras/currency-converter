@@ -2,24 +2,24 @@
   <form class="mt-4">
     <div class="from-currency-js form-row mb-2">
       <div class="col">
-        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrencyAmount">
+        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrency.amount">
       </div>
       <div class="col">
         <select class="form-control selectpicker" @change="handleSelectChange">
-          <option v-for="currency in currencies" data-content="<img src='https://restcountries.eu/data/esp.svg'>" :key="currency.code" :value="currency.code" :selected="currency.code === fromCurrency">
-            {{ currency.name }} : {{ currency.symbol }}
+          <option v-for="currency in currencies" data-content="<img src='https://restcountries.eu/data/esp.svg'>" :key="currency.code" :value="currency.code" :selected="currency.code === fromCurrency.code">
+            {{ fromCurrency.name }} : {{ currency.symbol }}
           </option>
         </select>
       </div>
     </div>
     <div class="to-currency-js form-row">
       <div class="col">
-        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrencyAmount">
+        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrency.amount">
       </div>
       <div class="col">
         <select class="form-control" @change="handleSelectChange">
-          <option v-for="currency in currencies" :key="currency.code" :value="currency.code" :selected="currency.code === toCurrency">
-            {{ currency.name }} : {{ currency.symbol }}
+          <option v-for="currency in currencies" :key="currency.code" :value="currency.code" :selected="currency.code === toCurrency.code">
+            {{ toCurrency.name }} : {{ currency.symbol }}
           </option>
         </select>
       </div>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import CustomSelectBox from '@/components/CustomSelectBox'
 
 export default {
@@ -74,8 +74,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fromCurrency', 'toCurrency', 'fromCurrencyAmount', 'toCurrencyAmount', 'currencies', 'exchangeRate']),
-    ...mapGetters(['currencyName'])
+    ...mapState(['fromCurrency', 'toCurrency', 'currencies', 'exchangeRate'])
   }
 }
 </script>

@@ -1,23 +1,20 @@
 <template>
   <div class="dropdown">
     <button class="btn btn-select" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <img :src="currencyFlag(fromCurrency)">{{ currencyName(fromCurrency) }} <i class="fa fa-caret-down"></i>
+      <img :src="fromCurrency.flag">{{ fromCurrency.name }} <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-      <button @click="handleClick" class="dropdown-item" type="button" v-for="currency in currencies" :key="currency.code" :value="currency.code" :class="currency.code === fromCurrency ? 'selected' : ''"><img :src="currency.countries[0].flag">{{ currency.name }}</button>
+      <button @click="handleClick" class="dropdown-item" type="button" v-for="currency in currencies" :key="currency.code" :value="currency.code" :class="currency.code === fromCurrency.code ? 'selected' : ''"><img :src="currency.countries[0].flag">{{ currency.name }}</button>
     </div>
   </div>
 
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
-  computed: {
-    ...mapState(['currencies', 'fromCurrency', 'toCurrency']),
-    ...mapGetters(['currencyName', 'currencyFlag'])
-  },
+  computed: mapState(['currencies', 'fromCurrency', 'toCurrency']),
   methods: {
     ...mapActions(['updateFromCurrency']),
     handleClick ({ target }) {
@@ -54,7 +51,8 @@ button {
 }
 
 .dropdown-menu {
-  height: 20vh;
+  height: 30vh;
+  width: 100%;
   overflow-y: scroll;
 
   > button:hover, .selected {
