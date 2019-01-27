@@ -44,10 +44,11 @@ button {
 }
 
 .btn-select {
-  border: 1px solid #ccc;
+  border: 1px solid #bbb;
   text-align: left;
   padding-left: .7em;
   width: 100%;
+  background: #fff;
 }
 
 .dropdown-menu {

@@ -1,5 +1,5 @@
 <template>
-  <div class="container text-center">
+  <div class="container text-center mt-4">
     <h1>Currency Converter</h1>
     <hr>
     <div class="content row">
@@ -105,25 +105,28 @@ export default {
   },
   created () {
     // load data from API
-    json.map(country => {
-      country.currencies.map(currency => {
-        // initialize additional fields
-        currency = { ...currency, 'countries': [{ name: country.name, flag: country.flag }] }
-        // discard currencies with empty or invalid codes
-        if (this.isValidCurrency(currency.code)) {
-          this.addElementsToArray(country, currency)
-        }
-      })
-    })
-
-    // console.log(this.elements)
-    // this.elements.forEach(element => {
-    //   let countries = element.countries
-    //   countries.find(element => element.code === '')
+    // json.map(country => {
+    //   country.currencies.map(currency => {
+    //     // initialize additional fields
+    //     currency = { ...currency, 'countries': [{ name: country.name, flag: country.flag }] }
+    //     // discard currencies with empty or invalid codes
+    //     if (this.isValidCurrency(currency.code)) {
+    //       this.addElementsToArray(country, currency)
+    //     }
+    //   })
     // })
-    // console.log(this.elements.find(element => element.code === 'USD'))
-
-    // let items = JSON.parse(localStorage.getItem('currencies'))
   }
 }
 </script>
+
+<style lang="scss">
+body {
+  background: #ccf;
+}
+hr {
+  margin: 2em auto;
+  background-color: #0089ff;
+  height: 2px;
+  width: 7em;
+}
+</style>
