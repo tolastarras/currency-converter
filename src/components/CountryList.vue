@@ -6,7 +6,7 @@
         <img :src="country.flag"> <span>{{ country.name }}</span>
       </li>
     </ul>
-  </div> 
+  </div>
 </template>
 
 <script>

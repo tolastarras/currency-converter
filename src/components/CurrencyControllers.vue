@@ -4,29 +4,16 @@
       <div class="col">
         <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrency.amount">
       </div>
-      <div class="col">
-        <select class="form-control selectpicker" @change="handleSelectChange">
-          <option v-for="currency in currencies" data-content="<img src='https://restcountries.eu/data/esp.svg'>" :key="currency.code" :value="currency.code" :selected="currency.code === fromCurrency.code">
-            {{ fromCurrency.name }} : {{ currency.symbol }}
-          </option>
-        </select>
+      <div class="col col-md-8">
+        <custom-select-box :currencyType="fromCurrency" />
       </div>
     </div>
     <div class="to-currency-js form-row">
       <div class="col">
         <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrency.amount">
       </div>
-      <div class="col">
-        <select class="form-control" @change="handleSelectChange">
-          <option v-for="currency in currencies" :key="currency.code" :value="currency.code" :selected="currency.code === toCurrency.code">
-            {{ toCurrency.name }} : {{ currency.symbol }}
-          </option>
-        </select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="col">
-        <custom-select-box />
+      <div class="col col-md-8">
+        <custom-select-box :currencyType="toCurrency" />
       </div>
     </div>
   </form>

@@ -8,8 +8,7 @@ export default new Vuex.Store({
   state: {
     fromCurrency: {
       code: 'USD',
-      amount: 1,
-      flag: ''
+      amount: 1
     },
     toCurrency: {
       code: 'EUR'
@@ -27,6 +26,9 @@ export default new Vuex.Store({
     },
     SET_FROM_CURRENCY_NAME (state, name) {
       state.fromCurrency.name = name
+    },
+    SET_FROM_CURRENCY_CODE (state, code) {
+      state.fromCurrency.code = code
     },
     SET_TO_CURRENCY_NAME (state, name) {
       state.toCurrency.name = name
@@ -59,14 +61,14 @@ export default new Vuex.Store({
         commit('SET_CURRENCIES', elements)
         dispatch('updateExchangeRate')
 
-        dispatch('updateFromCurrencyName', state.fromCurrency.code)
+        dispatch('updateFromCurrencyByCode', state.fromCurrency.code)
         dispatch('updateToCurrencyName', state.toCurrency.code)
         dispatch('convertToCurrency', state.fromCurrency.amount)
         dispatch('updateFromCurrencyFlag', state.fromCurrency.code)
       })
     },
-    updateFromCurrency ({ commit, dispatch }, code) {
-      // commit('SET_FROM_CURRENCY', currency)
+    updateFromCurrency ({ commit, dispatch }, currency) {
+      commit('SET_FROM_CURRENCY', currency)
       // dispatch('updateFromCurrencyName', code)
       dispatch('updateExchangeRate')
     },
@@ -81,6 +83,24 @@ export default new Vuex.Store({
     updateToCurrencyName ({ state, commit }, code) {
       let currency = state.currencies.filter(currency => currency.code === code)
       commit('SET_TO_CURRENCY_NAME', currency[0].name)
+    },
+    async updateFromCurrencyByCode ({ state, commit, dispatch }, code) {
+      let payload = await dispatch('currencyPaylod', code)
+      commit('SET_FROM_CURRENCY', payload)
+    },
+    async updateToCurrencyByCode ({ commit, dispatch }, code) {
+      let payload = await dispatch('currencyPaylod', code)
+      commit('SET_TO_CURRENCY', payload)
+    },
+    async currencyPaylod ({ state, dispatch }, code) {
+      let index = await dispatch('getCurrencyIndexByCurrencyCode', code)
+      let currency = state.currencies[index]
+      let payload = {
+        ...currency,
+        flag: currency.countries[0].flag
+      }
+
+      return payload
     },
     updateFromCurrencyAmount ({ commit, dispatch }, amount) {
       dispatch('convertToCurrency', amount)
@@ -185,6 +205,22 @@ export default new Vuex.Store({
       // return `${state.fromCurrencyAmount} ${state.fromCurrency} is worth ${convertedAmount} ${state.toCurrency}.`
       // // You can use these in the following countries: ${countries}`
       // dispatch('updateExchangeRate')
+    },
+    getCurrencyIndexByCurrencyCode ({ state }, code) {
+      return state.currencies.findIndex(currency => currency.code === code)
+    },
+    getMainCountryByCurrencyCode ({ state }, code) {
+      console.log('CURRENCIES:', state.currencies)
+      let country
+      state.currencies.find(currency => {
+        if (currency.code === code) {
+          country = currency.countries[0]
+        }
+      })
+
+      console.log('COUNTRY:', country)
+
+      return country
     }
   },
   getters: {
@@ -239,9 +275,7 @@ export default new Vuex.Store({
       let countries = []
       state.currencies.filter(currency => {
         if (currency.code === state.toCurrency.code) {
-          console.log('CODE:', currency.code)
-          console.log('COUNTRIES', currency.countries)
-          countries =  currency.countries
+          countries = currency.countries
         }
       })
 

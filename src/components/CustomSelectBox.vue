@@ -1,24 +1,32 @@
 <template>
   <div class="dropdown">
     <button class="btn btn-select" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <img :src="fromCurrency.flag">{{ fromCurrency.name }} <i class="fa fa-caret-down"></i>
+      <img :src="currencyType.flag">{{ currencyType.name }} <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-      <button @click="handleClick" class="dropdown-item" type="button" v-for="currency in currencies" :key="currency.code" :value="currency.code" :class="currency.code === fromCurrency.code ? 'selected' : ''"><img :src="currency.countries[0].flag">{{ currency.name }}</button>
+      <button @click="handleClick" class="dropdown-item" type="button" v-for="currency in currencies" :key="currency.code" :value="currency.code" :class="currency.code === currencyType.code ? 'selected' : ''"><img :src="currency.countries[0].flag">{{ currency.name }}</button>
     </div>
   </div>
-
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
-  computed: mapState(['currencies', 'fromCurrency', 'toCurrency']),
+  props: {
+    currencyType: Object
+  },
+  computed: mapState(['currencies']),
   methods: {
-    ...mapActions(['updateFromCurrency']),
     handleClick ({ target }) {
-      this.updateFromCurrency(target.value)
+      // method name based on drop box selected
+      let method = (this.isFromCurrency(target) ? 'updateFromCurrencyByCode' : 'updateToCurrencyByCode')
+
+      this.$store.dispatch(method, target.value)
+    },
+    isFromCurrency (target) {
+      // find parent class of select option
+      return target.closest('.form-row').classList.contains('from-currency-js')
     }
   }
 }

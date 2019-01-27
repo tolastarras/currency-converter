@@ -20,12 +20,11 @@
 
 <script>
 import stringSimilarity from 'string-similarity'
-import { mapState, mapGetters } from 'vuex'
 
 import CurrencyControllers from '@/components/CurrencyControllers'
 import MessageHeader from '@/components/MessageHeader'
 import CountryList from '@/components/CountryList'
-import json from '@/test.json'
+// import json from '@/test.json'
 
 export default {
   name: 'home',
