@@ -1,8 +1,8 @@
 <template>
-  <div class="container text-center mt-4">
+  <div class="container text-center my-5">
     <h1>Currency Converter</h1>
     <hr>
-    <div class="content row">
+    <div class="contentk row">
       <div class="col">
         <message-header />
         <div class="row">
@@ -13,13 +13,20 @@
       </div>
     </div>
     <div class="pt-5">
-      {{ 'message' }}
+      <h2 class="mb-4">Countries accepting the {{ toCurrency.name }}</h2>
+      <ul class="list-inline text-left">
+        <li class="list-inline-item col-md-6 col-xl-4" :key="country.name" v-for="country in currencyCountries">
+          <img :src="country.flag"> <span>{{ country.name }}</span>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
 import stringSimilarity from 'string-similarity'
+import { mapState, mapGetters } from 'vuex'
+
 import CurrencyControllers from '@/components/CurrencyControllers'
 import MessageHeader from '@/components/MessageHeader'
 import json from '@/test.json'
@@ -89,9 +96,6 @@ export default {
 
       this.elements.map(country => country.code === 'USD')
     },
-    moveMainCountryToFront () {
-
-    },
     bestMatchIndex (item) {
       // array of countries that share the same currency
       let countries = item.countries.map(country => country.name)
@@ -115,11 +119,15 @@ export default {
     //     }
     //   })
     // })
+  },
+  computed: {
+    ...mapGetters(['currencyCountries']),
+    ...mapState(['toCurrency'])
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 body {
   background: #ccf;
 }
@@ -128,5 +136,26 @@ hr {
   background-color: #0089ff;
   height: 2px;
   width: 7em;
+}
+ul {
+  display: inline;
+
+  > li {
+    list-style: none;
+    font-size: 1.3em;
+    margin-right: 0 !important;
+    margin-top: 0.8em;
+    padding-left: 0;
+    // height: 3em;
+    vertical-align: middle;
+    background-color: #eee;
+
+    > img {
+      width: 36px;
+      height: 26px;
+      margin-right: 10px;
+      margin-top: -5px;
+    }
+  }
 }
 </style>

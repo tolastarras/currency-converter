@@ -234,6 +234,18 @@ export default new Vuex.Store({
     async getCountries (toCurrency) {
       // const response = await this.$http.get(`https://restcountries.eu/rest/v2/currency/${toCurrency}`)
       // return response.data.map(country => country.name)
+    },
+    currencyCountries (state) {
+      let countries = []
+      state.currencies.filter(currency => {
+        if (currency.code === state.toCurrency.code) {
+          console.log('CODE:', currency.code)
+          console.log('COUNTRIES', currency.countries)
+          countries =  currency.countries
+        }
+      })
+
+      return countries
     }
   }
 })
