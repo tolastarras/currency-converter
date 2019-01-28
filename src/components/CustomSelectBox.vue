@@ -1,10 +1,12 @@
 <template>
   <div class="dropdown">
     <button class="btn btn-select" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <img :src="currencyType.flag">{{ currencyType.name }} <i class="fa fa-caret-down"></i>
+      <img :src="currencyType.flag"> {{ currencyType.name }} <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-      <button @click="handleClick" class="dropdown-item" type="button" v-for="currency in currencies" :key="currency.code" :value="currency.code" :class="currency.code === currencyType.code ? 'selected' : ''"><img :src="currency.countries[0].flag">{{ currency.name }}</button>
+      <button @click="handleClick" class="dropdown-item" type="button" v-for="currency in currencies" :key="currency.code" :value="currency.code" :class="currency.code === currencyType.code ? 'selected' : ''">
+        <img :src="currency.countries[0].flag">{{ currency.name }}
+      </button>
     </div>
   </div>
 </template>
@@ -43,6 +45,7 @@ button {
     width: 30px;
     margin-top: -6px;
     margin-right: 10px;
+    border: 1px solid #ccc;
   }
 
   i {

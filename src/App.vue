@@ -24,6 +24,6 @@ export default {
 
 <style lang="scss">
 body {
-  background-color: red;
+  background: #bcd;
 }
 </style>

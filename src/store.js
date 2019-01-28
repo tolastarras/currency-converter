@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Axios from 'axios'
+import json from '@/test.json'
 
 Vue.use(Vuex)
 
@@ -39,12 +40,15 @@ export default new Vuex.Store({
     SET_TO_CURRENCY_AMOUNT (state, amount) {
       state.toCurrency.amount = amount
     },
-    SET_FROM_CURRENCY_FLAG (state, flag) {
-      state.fromCurrency.flag = flag
-    },
     SET_CURRENCIES (state, items) {
       // sort currencies in asc order
       state.currencies = items.sort((a, b) => a.name < b.name ? -1 : 1)
+    },
+    PUSH_CURRENCY (state, currency) {
+      state.currencies.push(currency)
+    },
+    PUSH_TO_COUNTRIES (state, { index, payload }) {
+      state.currencies[index].countries.push(payload)
     },
     SET_EXCHANGE_RATE (state, amount) {
       state.exchangeRate = amount
@@ -56,16 +60,14 @@ export default new Vuex.Store({
   },
   actions: {
     init ({ state, dispatch, commit }) {
-      dispatch('loadCurrencies').then(elements => {
-        // set store currencies
-        commit('SET_CURRENCIES', elements)
-        dispatch('updateExchangeRate')
+      dispatch('loadCurrencies')
+      dispatch('updateFromCurrencyByCode', state.fromCurrency.code)
+      dispatch('updateToCurrencyByCode', state.toCurrency.code)      
 
-        dispatch('updateFromCurrencyByCode', state.fromCurrency.code)
-        dispatch('updateToCurrencyName', state.toCurrency.code)
-        dispatch('convertToCurrency', state.fromCurrency.amount)
-        dispatch('updateFromCurrencyFlag', state.fromCurrency.code)
-      })
+      dispatch('updateExchangeRate')
+
+      // dispatch('updateToCurrencyName', state.toCurrency.code)
+      // dispatch('convertToCurrency', state.fromCurrency.amount)
     },
     updateFromCurrency ({ commit, dispatch }, currency) {
       commit('SET_FROM_CURRENCY', currency)
@@ -95,12 +97,15 @@ export default new Vuex.Store({
     async currencyPaylod ({ state, dispatch }, code) {
       let index = await dispatch('getCurrencyIndexByCurrencyCode', code)
       let currency = state.currencies[index]
-      let payload = {
-        ...currency,
-        flag: currency.countries[0].flag
+
+      // initialize flag value
+      let flag = currency.countries[0].flag
+
+      if (code.toLowerCase() === 'eur') {
+        flag = require('@/assets/flags/europe.svg')
       }
 
-      return payload
+      return { ...currency, flag }
     },
     updateFromCurrencyAmount ({ commit, dispatch }, amount) {
       dispatch('convertToCurrency', amount)
@@ -108,33 +113,115 @@ export default new Vuex.Store({
     updateToCurrencyAmount ({ commit, dispatch }, amount) {
       dispatch('convertFromCurrency', amount)
     },
-    updateFromCurrencyFlag ({ state, commit }, code) {
-      let currency = state.currencies.filter(currency => currency.code === code)
+    async loadCurrencies ({ state, dispatch, commit }) {
+      if (!localStorage.getItem('currencies')) {
+        console.log('loading currencies from API ...')
+        // load currencies from api
+        // const response = await Axios.get('https://restcountries.eu/rest/v2/all?fields=name;flag;currencies')
 
-      // wait for currency to load
-      // if (!currency.length) return
+        // elements = response.data.map(country => {
+        json.map(country => {
+          country.currencies.map(currency => {
+            // initialize additional fields
+            currency = { ...currency, 'countries': [{ name: country.name, flag: country.flag }] }
+            // discard currencies with empty or invalid codes
+            if (currency.code && currency.code !== '(none)') {
+              // dispatch('addCurrencyToCurrenciesArray', { country, currency })
+              // **********************
+              // discard duplicate currencies
+              let index = state.currencies.findIndex(element => {
+                return element.code === currency.code
+              })
 
-      // countries array
-      let countries = currency[0].countries
-      // console.log('COUNTRIES:', countries)
+              // currency found at position index
+              if (index > 0) {
+                let payload = { name: country.name, flag: country.flag }
+                // add country to currency countries array
+                commit('PUSH_TO_COUNTRIES', { index, payload })
+              } else {
+                // currency not in the array yet
+                commit('PUSH_CURRENCY', currency)
+              }
 
-      let index = 0
-      // if (code.toLowerCase() === 'usd') {
-      //   countries.filter((country, i) => {
-      //     if (country.name === 'United States of America') {
-      //       index = i
-      //     }
-      //   })
-      // }
+              // this.rearrangeArray()              
+            }
+          })          
+        })
 
-      // if (code.toLowerCase() === 'eur') {
-      //   console.log('EURO >> display european flag ...')
-      // }
-      // console.log('index: ' + index)
-
-      commit('SET_FROM_CURRENCY_FLAG', countries[index].flag)
+        // set local storage so on the next call no api call is required
+        localStorage.setItem('currencies', JSON.stringify(state.currencies))
+      } else {
+        commit('SET_CURRENCIES', JSON.parse(localStorage.getItem('currencies')))
+      }      
     },
-    async loadCurrencies ({ commit, dispatch }) {
+    indexOfCurrency ({ state }, code) {
+      // console.log('CODE:', code)
+      // console.log(state.currencies)
+      return state.currencies.findIndex(element => {
+        return element.code === code
+      })
+    },
+    /**
+     * Add currency to currencies array or countries to currency countries array if currency already in array.
+     */
+    async addCurrencyToCurrenciesArray ({ state, commit, dispatch }, { country, currency }) {
+      // discard duplicate currencies
+      // let index = await dispatch('indexOfCurrency', currency.code)
+      console.log('CODE', currency.code)
+      console.log('CURRENCIES', state.currencies)
+
+      let index = await state.currencies.findIndex(element => {
+        console.log('SSSSSSSSSSSSSSSSSSS', element)
+        console.log('ELEMENT', element.code)
+        console.log('CODE', currency.code)
+        return element.code === currency.code
+      })
+      console.log('INDEX', index)
+
+      // currency found at position index
+      if (index > 0) {
+        // add country to currency countries array
+        commit('PUSH_TO_COUNTRIES', [index, { name: country.name, flag: country.flag }])
+      } else {
+        // currency not in the array yet
+        commit('PUSH_CURRENCY', currency)
+      }
+
+      // this.rearrangeArray()
+    },
+    /**
+     * Move main flag in front of array for easier handling.
+     * for example: United States flag for USD currencies
+     */
+    rearrangeArray () {
+      this.elements.forEach(item => {
+        if (item.countries.length === 1) return false
+
+        if (item.countries.length > 1) {
+          console.log('******************')
+          // console.log('currency:', item.name + ', code: ' + item.code)
+          let index = this.bestMatchIndex(item)
+
+          // move country to the front of the array
+          if (index > 0) {
+            let country = item.countries[index]
+            item.countries[index] = item.countries[0]
+            item.countries[0] = country
+          }
+        }
+      })
+    },
+    bestMatchIndex (item) {
+      // array of countries that share the same currency
+      let countries = item.countries.map(country => country.name)
+      let matches = stringSimilarity.findBestMatch(item.name, countries)
+      // guessed flag country
+      let possibleCountry = matches.bestMatch.target
+
+      // find country in array of countries
+      return countries.findIndex(country => country === possibleCountry)
+    },
+    async loadCurrencies2 ({ commit, dispatch }) {
       let elements = []
 
       if (!localStorage.getItem('currencies')) {
@@ -267,10 +354,10 @@ export default new Vuex.Store({
 
       return countries[index].flag
     },
-    async getCountries (toCurrency) {
-      // const response = await this.$http.get(`https://restcountries.eu/rest/v2/currency/${toCurrency}`)
-      // return response.data.map(country => country.name)
-    },
+    // async getCountries (toCurrency) {
+    //   // const response = await this.$http.get(`https://restcountries.eu/rest/v2/currency/${toCurrency}`)
+    //   // return response.data.map(country => country.name)
+    // },
     currencyCountries (state) {
       let countries = []
       state.currencies.filter(currency => {
