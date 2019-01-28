@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Axios from 'axios'
+import stringSimilarity from 'string-similarity'
+
 import json from '@/test.json'
 
 Vue.use(Vuex)
@@ -56,13 +58,23 @@ export default new Vuex.Store({
       if (state.toCurrencyAmount === 0) {
         state.toCurrencyAmount = amount
       }
+    },
+    SET_CURRENCY_MAIN_COUNTRY (state, { countries, countryIndex, currencyIndex }) {
+      // country to move up to the front of the array
+      let country = countries[countryIndex]
+
+      // country at position 0 of the array
+      let allCountries = state.currencies[currencyIndex].countries
+      allCountries[countryIndex] = allCountries[0]
+      allCountries[0] = country
     }
   },
   actions: {
     init ({ state, dispatch, commit }) {
+      console.log('INIT...')
       dispatch('loadCurrencies')
       dispatch('updateFromCurrencyByCode', state.fromCurrency.code)
-      dispatch('updateToCurrencyByCode', state.toCurrency.code)      
+      dispatch('updateToCurrencyByCode', state.toCurrency.code)
 
       dispatch('updateExchangeRate')
 
@@ -71,7 +83,6 @@ export default new Vuex.Store({
     },
     updateFromCurrency ({ commit, dispatch }, currency) {
       commit('SET_FROM_CURRENCY', currency)
-      // dispatch('updateFromCurrencyName', code)
       dispatch('updateExchangeRate')
     },
     updateToCurrency ({ commit, dispatch }, code) {
@@ -143,16 +154,18 @@ export default new Vuex.Store({
                 commit('PUSH_CURRENCY', currency)
               }
 
-              // this.rearrangeArray()              
+              dispatch('rearrangeArray')
             }
-          })          
+          })
         })
 
         // set local storage so on the next call no api call is required
         localStorage.setItem('currencies', JSON.stringify(state.currencies))
       } else {
         commit('SET_CURRENCIES', JSON.parse(localStorage.getItem('currencies')))
-      }      
+        // TEMPORARY
+        dispatch('rearrangeArray')
+      }
     },
     indexOfCurrency ({ state }, code) {
       // console.log('CODE:', code)
@@ -193,76 +206,28 @@ export default new Vuex.Store({
      * Move main flag in front of array for easier handling.
      * for example: United States flag for USD currencies
      */
-    rearrangeArray () {
-      this.elements.forEach(item => {
-        if (item.countries.length === 1) return false
-
-        if (item.countries.length > 1) {
-          console.log('******************')
-          // console.log('currency:', item.name + ', code: ' + item.code)
-          let index = this.bestMatchIndex(item)
-
-          // move country to the front of the array
-          if (index > 0) {
-            let country = item.countries[index]
-            item.countries[index] = item.countries[0]
-            item.countries[0] = country
-          }
+    rearrangeArray ({ state, dispatch, commit }) {
+      state.currencies.map((currency, position) => {
+        console.log('POSITION:', position)
+        if (currency.countries.length > 1) {
+          dispatch('bestMatchIndex', currency).then(countryIndex => {
+            if (countryIndex > 0) {
+              console.log('countryINDEX:::', countryIndex)
+              commit('SET_CURRENCY_MAIN_COUNTRY', { countries: currency.countries, countryIndex, currencyIndex: position })
+            }
+          })
         }
       })
     },
-    bestMatchIndex (item) {
+    bestMatchIndex ({ state }, currency) {
       // array of countries that share the same currency
-      let countries = item.countries.map(country => country.name)
-      let matches = stringSimilarity.findBestMatch(item.name, countries)
+      let countries = currency.countries.map(country => country.name)
+      let matches = stringSimilarity.findBestMatch(currency.name, countries)
       // guessed flag country
       let possibleCountry = matches.bestMatch.target
 
       // find country in array of countries
       return countries.findIndex(country => country === possibleCountry)
-    },
-    async loadCurrencies2 ({ commit, dispatch }) {
-      let elements = []
-
-      if (!localStorage.getItem('currencies')) {
-        console.log('loading currencies from API ...')
-
-        // load currencies from api
-        const response = await Axios.get('https://restcountries.eu/rest/v2/all?fields=name;flag;currencies')
-
-        response.data.map(record => {
-          record.currencies.map(currency => {
-            // initialize additional fields
-            currency = { ...currency, 'countries': [{ name: record.name, flag: record.flag }] }
-            // discard currencies with empty or invalid codes
-            if (currency.code && currency.code !== '(none)') {
-              // discard duplicates
-              let hasCurrency = elements.find(element => {
-                if (element.code === currency.code) {
-                  // add country to currency countries array
-                  element.countries.push({ name: record.name, flag: record.flag })
-
-                  return true
-                }
-
-                return false
-              })
-
-              // currency not in the array yet
-              if (!hasCurrency) {
-                elements.push(currency)
-              }
-            }
-          })
-        })
-
-        // set local storage so on the next call no api call is required
-        localStorage.setItem('currencies', JSON.stringify(elements))
-      } else {
-        elements = JSON.parse(localStorage.getItem('currencies'))
-      }
-
-      return elements
     },
     async updateExchangeRate ({ state, commit, dispatch }) {
       // console.log('UPDATE EXCHANGE RATE:', state.fromCurrency, state.toCurrency, state.fromCurrencyAmount, state.toCurrencyAmount)

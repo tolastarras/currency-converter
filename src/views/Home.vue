@@ -20,8 +20,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import stringSimilarity from 'string-similarity'
-
 import CurrencyControllers from '@/components/CurrencyControllers'
 import MessageHeader from '@/components/MessageHeader'
 import CountryList from '@/components/CountryList'
