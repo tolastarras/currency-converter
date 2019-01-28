@@ -45,7 +45,6 @@ button {
     width: 30px;
     margin-top: -6px;
     margin-right: 10px;
-    border: 1px solid #ccc;
   }
 
   i {

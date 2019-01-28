@@ -3,8 +3,6 @@ import Vuex from 'vuex'
 import Axios from 'axios'
 import stringSimilarity from 'string-similarity'
 
-import json from '@/test.json'
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -110,6 +108,7 @@ export default new Vuex.Store({
       let currency = state.currencies[index]
 
       // initialize flag value
+      // TODO: The line below GENERATES AN ERROR FIRST TIME ON LOADCURRENCIES
       let flag = currency.countries[0].flag
 
       if (code.toLowerCase() === 'eur') {
@@ -128,10 +127,9 @@ export default new Vuex.Store({
       if (!localStorage.getItem('currencies')) {
         console.log('loading currencies from API ...')
         // load currencies from api
-        // const response = await Axios.get('https://restcountries.eu/rest/v2/all?fields=name;flag;currencies')
-
-        // elements = response.data.map(country => {
-        json.map(country => {
+        const response = await Axios.get('https://restcountries.eu/rest/v2/all?fields=name;flag;currencies')
+        response.data.map(country => {
+        // json.map(country => {
           country.currencies.map(currency => {
             // initialize additional fields
             currency = { ...currency, 'countries': [{ name: country.name, flag: country.flag }] }
@@ -168,8 +166,6 @@ export default new Vuex.Store({
       }
     },
     indexOfCurrency ({ state }, code) {
-      // console.log('CODE:', code)
-      // console.log(state.currencies)
       return state.currencies.findIndex(element => {
         return element.code === code
       })
@@ -208,11 +204,9 @@ export default new Vuex.Store({
      */
     rearrangeArray ({ state, dispatch, commit }) {
       state.currencies.map((currency, position) => {
-        console.log('POSITION:', position)
         if (currency.countries.length > 1) {
           dispatch('bestMatchIndex', currency).then(countryIndex => {
             if (countryIndex > 0) {
-              console.log('countryINDEX:::', countryIndex)
               commit('SET_CURRENCY_MAIN_COUNTRY', { countries: currency.countries, countryIndex, currencyIndex: position })
             }
           })
