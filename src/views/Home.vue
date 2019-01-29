@@ -2,7 +2,7 @@
   <div class="container text-center my-5">
     <h1>Currency Converter</h1>
     <hr>
-    <div class="contentk row">
+    <div class="row pt-4">
       <div class="col">
         <message-header />
         <div class="row">
@@ -43,8 +43,8 @@ export default {
 <style lang="scss">
 hr {
   margin: 2em auto;
-  background-color: #0089ff;
-  height: 2px;
+  background: #0089ff;
+  height: 2px !important;
   width: 7em;
 }
 </style>

@@ -21,8 +21,6 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_FROM_CURRENCY (state, payload) {
-      // let amount = state.fromCurrency.amount
-      // state.fromCurrency = { ...payload, amount }
       state.fromCurrency = payload
     },
     SET_TO_CURRENCY (state, payload) {
@@ -42,7 +40,6 @@ export default new Vuex.Store({
     },
     SET_TO_CURRENCY_AMOUNT (state, amount) {
       state.toCurrency.amount = amount
-      console.log(state.toCurrency)
     },
     SET_CURRENCIES (state, items) {
       // sort currencies in asc order
@@ -116,6 +113,7 @@ export default new Vuex.Store({
       // TODO: The line below GENERATES AN ERROR FIRST TIME ON LOADCURRENCIES
       let flag = currency.countries[0].flag
 
+      // refactor into a function since it is duplicated on customSelectBox component
       if (code.toLowerCase() === 'eur') {
         flag = require('@/assets/flags/europe.svg')
       }
@@ -128,20 +126,21 @@ export default new Vuex.Store({
     updateToCurrencyAmount ({ commit, dispatch }, amount) {
       dispatch('convertFromCurrency', amount)
     },
+    /**
+     * Load currencies on app init from localStorage or API if the localStorage is empty.
+     */
     async loadCurrencies ({ state, dispatch, commit }) {
       if (!localStorage.getItem('currencies')) {
         console.log('loading currencies from API ...')
         // load currencies from api
         const response = await Axios.get('https://restcountries.eu/rest/v2/all?fields=name;flag;currencies')
         response.data.map(country => {
-        // json.map(country => {
           country.currencies.map(currency => {
             // initialize additional fields
             currency = { ...currency, 'countries': [{ name: country.name, flag: country.flag }] }
             // discard currencies with empty or invalid codes
             if (currency.code && currency.code !== '(none)') {
               // dispatch('addCurrencyToCurrenciesArray', { country, currency })
-              // **********************
               // discard duplicate currencies
               let index = state.currencies.findIndex(element => {
                 return element.code === currency.code
@@ -156,8 +155,6 @@ export default new Vuex.Store({
                 // currency not in the array yet
                 commit('PUSH_CURRENCY', currency)
               }
-
-              dispatch('rearrangeArray')
             }
           })
         })
@@ -166,8 +163,8 @@ export default new Vuex.Store({
         localStorage.setItem('currencies', JSON.stringify(state.currencies))
       } else {
         commit('SET_CURRENCIES', JSON.parse(localStorage.getItem('currencies')))
-        // TEMPORARY
-        dispatch('rearrangeArray')
+        // TODO: rearrange array ONCE prior to saving it to local storage. This way the rearrange function will run on each init.
+        dispatch('rearrangeArray')        
       }
     },
     indexOfCurrency ({ state }, code) {
@@ -184,12 +181,7 @@ export default new Vuex.Store({
       console.log('CODE', currency.code)
       console.log('CURRENCIES', state.currencies)
 
-      let index = await state.currencies.findIndex(element => {
-        console.log('SSSSSSSSSSSSSSSSSSS', element)
-        console.log('ELEMENT', element.code)
-        console.log('CODE', currency.code)
-        return element.code === currency.code
-      })
+      let index = await state.currencies.findIndex(element => element.code === currency.code)
       console.log('INDEX', index)
 
       // currency found at position index
@@ -200,8 +192,6 @@ export default new Vuex.Store({
         // currency not in the array yet
         commit('PUSH_CURRENCY', currency)
       }
-
-      // this.rearrangeArray()
     },
     /**
      * Move main flag in front of array for easier handling.
@@ -256,7 +246,6 @@ export default new Vuex.Store({
       return state.currencies.findIndex(currency => currency.code === code)
     },
     getMainCountryByCurrencyCode ({ state }, code) {
-      console.log('CURRENCIES:', state.currencies)
       let country
       state.currencies.find(currency => {
         if (currency.code === code) {

@@ -24,6 +24,7 @@ export default {
 
 <style lang="scss">
 body {
-  background: #bcd;
+  background: #ddd !important;
+  font-family: arial !important;
 }
 </style>

@@ -1,19 +1,19 @@
 <template>
   <form class="mt-4">
     <div class="from-currency-js form-row mb-2">
-      <div class="col">
-        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrency.amount">
-      </div>
-      <div class="col col-md-8">
+      <div class="col col-md-12 col-lg-8">
         <custom-select-box :currencyType="fromCurrency" />
+      </div>
+      <div class="col col-md-12 col-lg-4">
+        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrency.amount">
       </div>
     </div>
     <div class="to-currency-js form-row">
-      <div class="col">
-        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrency.amount">
-      </div>
-      <div class="col col-md-8">
+      <div class="col col-md-12 col-lg-8">
         <custom-select-box :currencyType="toCurrency" />
+      </div>
+      <div class="col col-md-12 col-lg-4">
+        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrency.amount">
       </div>
     </div>
   </form>
@@ -27,10 +27,6 @@ export default {
   components: {
     CustomSelectBox
   },
-  mounted () {
-    console.log('from', this.fromCurrency.amount)
-    console.log('to:', this.toCurrency.amount)
-  },
   methods: {
     ...mapActions(['updateFromCurrencyAmount', 'updateToCurrencyAmount']),
     handleKeyPress (e) {
@@ -41,7 +37,7 @@ export default {
       let input = document.querySelector(className + ' input').value
       let validKey = /[\d|.]/
 
-      // TODO: try to redo with a regular expression
+      // text box inputs should contain only digits and at most one decimal point
       if (!validKey.test(e.key) || (e.key === '.' && input.includes('.')) || (input.charAt(0) === '0' && input.length === 1 && e.key !== '.')) {
         e.preventDefault()
       }
@@ -69,3 +65,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+input {
+  min-height: 40px;
+  color: orangered;
+  font-size: 1.5em;
+  font-weight: 500;
+}
+</style>

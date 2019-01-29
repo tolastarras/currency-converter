@@ -13,6 +13,7 @@ https://medium.freecodecamp.org/how-to-master-async-await-with-this-real-world-e
 December 25, 2018
 
 TODO:
-1. country flags in select box
-2. fromCurrencyAmount text box does not update toCurrencyAmount
-3. Display countries that accept the selected currency
+1. The line currency.countries[0].flag generates an error on loadCurrencies from API
+2. Refactor loadCurrencies function
+3. Function rearrangeArray should update state.currencies array prior to storing it in localStorage
+4. style page

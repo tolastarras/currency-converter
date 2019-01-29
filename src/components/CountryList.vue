@@ -32,7 +32,9 @@ ul {
     padding-left: 0;
     // height: 3em;
     vertical-align: middle;
-    background-color: #bcd;
+    background-color: #ddd;
+    border-bottom: 1px dotted #bbb;
+    padding-bottom: 0.4em;
 
     > img {
       width: 36px;
