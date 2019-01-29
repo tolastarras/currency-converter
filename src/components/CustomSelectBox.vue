@@ -62,7 +62,7 @@ button {
 
   span > i {
     vertical-align: bottom !important;
-  }    
+  }
 }
 
 .btn-select {
