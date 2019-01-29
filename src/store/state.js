@@ -5,7 +5,7 @@ export default {
     amount: 1
   },
   toCurrency: {
-    code: 'EUR'
+    code: 'EUR',
   },
   exchangeRate: 0,
   currencies: []

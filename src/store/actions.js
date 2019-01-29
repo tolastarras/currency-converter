@@ -5,13 +5,13 @@ export default {
   init ({ state, dispatch }) {
     // load currencies from local storage or api
     dispatch('loadCurrencies')
-    // exchange rate for the default currencies USD to EUR
-    dispatch('updateExchangeRate')
     // initialize extra values to the fromCurrency and toCurrency objects
     dispatch('updateFromCurrencyByCode', state.fromCurrency.code)
-    dispatch('updateToCurrencyByCode', state.toCurrency.code)
+    dispatch('updateToCurrencyByCode', state.toCurrency.code)     
     // calculate currency conversion
-    dispatch('convertToCurrency', state.fromCurrency.amount)
+    // dispatch('convertToCurrency', state.fromCurrency.amount)
+    // exchange rate for the default currencies USD to EUR
+    dispatch('updateExchangeRate')    
   },
   updateFromCurrency ({ commit, dispatch }, currency) {
     commit('SET_FROM_CURRENCY', currency)
@@ -32,10 +32,12 @@ export default {
   async updateFromCurrencyByCode ({ state, commit, dispatch }, code) {
     let payload = await dispatch('currencyPaylod', code)
     commit('SET_FROM_CURRENCY', { ...payload, amount: state.fromCurrency.amount })
+    dispatch('updateExchangeRate')
   },
   async updateToCurrencyByCode ({ state, commit, dispatch }, code) {
     let payload = await dispatch('currencyPaylod', code)
     commit('SET_TO_CURRENCY', { ...payload, amount: state.toCurrency.amount })
+    dispatch('updateExchangeRate')
   },
   async currencyPaylod ({ state, dispatch }, code) {
     // get currency index from currencies array by currency code
@@ -126,26 +128,21 @@ export default {
     return countries.findIndex(country => country === possibleCountry)
   },
   async updateExchangeRate ({ state, commit, dispatch }) {
-    // console.log('UPDATE EXCHANGE RATE:', state.fromCurrency, state.toCurrency, state.fromCurrencyAmount, state.toCurrencyAmount)
-    // const API_KEY = process.env.VUE_APP_CURRENCY_LAYER_KEY
-    // let url = `http://apilayer.net/api/live?access_key=${API_KEY}&currencies=${state.toCurrency}&source=${state.fromCurrency}&format=1`
-
-    // const response = await Axios.get(url)
-    // return response.data.quotes[`${state.fromCurrency}${state.toCurrency}`]
+    const url = `http://free.currencyconverterapi.com/api/v5/convert?q=${state.fromCurrency.code}_${state.toCurrency.code}&compact=y`
+    const response = await Axios.get(url)
+    const exchangeRate = response.data[`${state.fromCurrency.code}_${state.toCurrency.code}`].val
 
     // random decimal for testing purposes
-    commit('SET_EXCHANGE_RATE', (Math.random() * 5).toFixed(2))
-    // dispatch('convertToCurrency')
+    commit('SET_EXCHANGE_RATE', exchangeRate)
+    dispatch('convertToCurrency', state.fromCurrency.amount)
   },
   async convertFromCurrency ({ state, commit }, amount) {
     let convertedAmount = amount / state.exchangeRate
-
     commit('SET_FROM_CURRENCY_AMOUNT', convertedAmount)
     commit('SET_TO_CURRENCY_AMOUNT', amount)
   },
   async convertToCurrency ({ state, commit }, amount) {
     let convertedAmount = amount * state.exchangeRate
-
     commit('SET_FROM_CURRENCY_AMOUNT', amount)
     commit('SET_TO_CURRENCY_AMOUNT', convertedAmount)
   },
