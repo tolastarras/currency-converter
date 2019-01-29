@@ -92,11 +92,12 @@ export default {
         })
       })
 
+      await dispatch('rearrangeArray')
+
       // set local storage so on the next call no api call is required
       localStorage.setItem('currencies', JSON.stringify(state.currencies))
     } else {
       commit('SET_CURRENCIES', JSON.parse(localStorage.getItem('currencies')))
-      dispatch('rearrangeArray')
     }
   },
   /**
