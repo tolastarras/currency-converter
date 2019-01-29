@@ -27,6 +27,10 @@ export default {
   components: {
     CustomSelectBox
   },
+  mounted () {
+    console.log('from', this.fromCurrency.amount)
+    console.log('to:', this.toCurrency.amount)
+  },
   methods: {
     ...mapActions(['updateFromCurrencyAmount', 'updateToCurrencyAmount']),
     handleKeyPress (e) {

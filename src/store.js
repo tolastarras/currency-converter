@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     fromCurrency: {
+      // amount, code, countries, flag, name, symbol
       code: 'USD',
       amount: 1
     },
@@ -20,6 +21,8 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_FROM_CURRENCY (state, payload) {
+      // let amount = state.fromCurrency.amount
+      // state.fromCurrency = { ...payload, amount }
       state.fromCurrency = payload
     },
     SET_TO_CURRENCY (state, payload) {
@@ -39,6 +42,7 @@ export default new Vuex.Store({
     },
     SET_TO_CURRENCY_AMOUNT (state, amount) {
       state.toCurrency.amount = amount
+      console.log(state.toCurrency)
     },
     SET_CURRENCIES (state, items) {
       // sort currencies in asc order
@@ -69,15 +73,15 @@ export default new Vuex.Store({
   },
   actions: {
     init ({ state, dispatch, commit }) {
-      console.log('INIT...')
+      // load currencies from local storage or api
       dispatch('loadCurrencies')
+      // exchange rate for the default currencies USD to EUR
+      dispatch('updateExchangeRate')
+      // initialize extra values to the fromCurrency and toCurrency objects
       dispatch('updateFromCurrencyByCode', state.fromCurrency.code)
       dispatch('updateToCurrencyByCode', state.toCurrency.code)
-
-      dispatch('updateExchangeRate')
-
-      // dispatch('updateToCurrencyName', state.toCurrency.code)
-      // dispatch('convertToCurrency', state.fromCurrency.amount)
+      // calculate currency conversion
+      dispatch('convertToCurrency', state.fromCurrency.amount)
     },
     updateFromCurrency ({ commit, dispatch }, currency) {
       commit('SET_FROM_CURRENCY', currency)
@@ -97,13 +101,14 @@ export default new Vuex.Store({
     },
     async updateFromCurrencyByCode ({ state, commit, dispatch }, code) {
       let payload = await dispatch('currencyPaylod', code)
-      commit('SET_FROM_CURRENCY', payload)
+      commit('SET_FROM_CURRENCY', { ...payload, amount: state.fromCurrency.amount })
     },
-    async updateToCurrencyByCode ({ commit, dispatch }, code) {
+    async updateToCurrencyByCode ({ state, commit, dispatch }, code) {
       let payload = await dispatch('currencyPaylod', code)
-      commit('SET_TO_CURRENCY', payload)
+      commit('SET_TO_CURRENCY', { ...payload, amount: state.toCurrency.amount })
     },
     async currencyPaylod ({ state, dispatch }, code) {
+      // get currency index from currencies array by currency code
       let index = await dispatch('getCurrencyIndexByCurrencyCode', code)
       let currency = state.currencies[index]
 
@@ -247,11 +252,6 @@ export default new Vuex.Store({
       commit('SET_FROM_CURRENCY_AMOUNT', amount)
       commit('SET_TO_CURRENCY_AMOUNT', convertedAmount)
     },
-    async currencyCountries ({ state, commit, actions }) {
-      // return `${state.fromCurrencyAmount} ${state.fromCurrency} is worth ${convertedAmount} ${state.toCurrency}.`
-      // // You can use these in the following countries: ${countries}`
-      // dispatch('updateExchangeRate')
-    },
     getCurrencyIndexByCurrencyCode ({ state }, code) {
       return state.currencies.findIndex(currency => currency.code === code)
     },
@@ -264,8 +264,6 @@ export default new Vuex.Store({
         }
       })
 
-      console.log('COUNTRY:', country)
-
       return country
     }
   },
@@ -273,50 +271,6 @@ export default new Vuex.Store({
     currencies (state) {
       return state.currencies
     },
-    // currencyName: (state) => (code) => {
-    //   return new Promise(resolve => {
-    //     state.currencies.filter(currency => currency.code === code)
-    //     console.log(currency[0].name)
-    //     resolve(currency[0].name)
-    //   })
-    //   // let currency = state.currencies.filter(currency => currency.code === code)
-    //   // // wait for currency to load
-    //   // if (!currency.length) return
-
-    //   // console.log('currency', currency)
-
-    //   // return currency.pop().name
-    // },
-    currencyFlag: (state) => (code) => {
-      let currency = state.currencies.filter(currency => currency.code === code)
-
-      // wait for currency to load
-      if (!currency.length) return
-
-      // countries array
-      let countries = currency.pop().countries
-      // console.log('COUNTRIES:', countries)
-
-      let index = 0
-      if (code.toLowerCase() === 'usd') {
-        countries.filter((country, i) => {
-          if (country.name === 'United States of America') {
-            index = i
-          }
-        })
-      }
-
-      if (code.toLowerCase() === 'eur') {
-        console.log('EURO >> display european flag ...')
-      }
-      console.log('index: ' + index)
-
-      return countries[index].flag
-    },
-    // async getCountries (toCurrency) {
-    //   // const response = await this.$http.get(`https://restcountries.eu/rest/v2/currency/${toCurrency}`)
-    //   // return response.data.map(country => country.name)
-    // },
     currencyCountries (state) {
       let countries = []
       state.currencies.filter(currency => {
