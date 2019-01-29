@@ -7,11 +7,9 @@ export default {
     dispatch('loadCurrencies')
     // initialize extra values to the fromCurrency and toCurrency objects
     dispatch('updateFromCurrencyByCode', state.fromCurrency.code)
-    dispatch('updateToCurrencyByCode', state.toCurrency.code)     
-    // calculate currency conversion
-    // dispatch('convertToCurrency', state.fromCurrency.amount)
+    dispatch('updateToCurrencyByCode', state.toCurrency.code)
     // exchange rate for the default currencies USD to EUR
-    dispatch('updateExchangeRate')    
+    dispatch('updateExchangeRate')
   },
   updateFromCurrency ({ commit, dispatch }, currency) {
     commit('SET_FROM_CURRENCY', currency)

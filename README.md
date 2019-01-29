@@ -18,3 +18,4 @@ TODO:
 3. style page
 4. add helper to handle the isFromCurrency function
 5. app is calling updateExchangeRate twice for each request
+6. feature: allow user to type in custom select box to find currencies

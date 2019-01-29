@@ -6,20 +6,19 @@
       <div class="col">
         <message-header />
         <div class="row">
-          <div class="col col-md-8 offset-md-2">
+          <div class="col">
             <currency-controllers />
           </div>
         </div>
       </div>
     </div>
-    <div class="row pt-5" v-show="hasMultipleCountries">
+    <div class="row pt-5">
       <country-list />
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import CurrencyControllers from '@/components/CurrencyControllers'
 import MessageHeader from '@/components/MessageHeader'
 import CountryList from '@/components/CountryList'
@@ -30,12 +29,6 @@ export default {
     CurrencyControllers,
     MessageHeader,
     CountryList
-  },
-  computed: {
-    ...mapState(['toCurrency']),
-    hasMultipleCountries () {
-      return this.toCurrency.countries && this.toCurrency.countries.length > 1
-    }
   }
 }
 </script>

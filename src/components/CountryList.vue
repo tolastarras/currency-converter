@@ -1,11 +1,23 @@
 <template>
   <div class="container">
-    <h2 class="mb-4">There are {{ currencyCountries.length }} Countries accepting the {{ toCurrency.name }}</h2>
-    <ul class="list-inline text-left">
-      <li class="list-inline-item col-md-6 col-xl-4" :key="country.name" v-for="country in currencyCountries">
-        <img :src="country.flag"> <span>{{ country.name }}</span>
-      </li>
-    </ul>
+    <div v-if="currencyCountries.length > 1">
+      <h3 class="mb-4">
+        There are {{ currencyCountries.length }} Countries accepting the {{ toCurrency.name }}
+      </h3>
+      <ul class="list-inline text-left">
+        <li class="list-inline-item col-md-6 col-xl-4" :key="country.name" v-for="country in currencyCountries">
+          <img :src="country.flag"> <span>{{ country.name }}</span>
+        </li>
+      </ul>
+    </div>
+    <div v-else>
+      <h3 class="mb-5">
+        {{ currencyCountries[0].name }} is the only country accepting the {{ toCurrency.name }}
+      </h3>
+      <div class="one-country">
+        <img :src="currencyCountries[0].flag">
+      </div>
+    </div>
   </div>
 </template>
 
@@ -22,7 +34,8 @@ export default {
 
 <style lang="scss">
 ul {
-  display: inline;
+  display: flex;
+  flex-wrap: wrap;
 
   > li {
     list-style: none;
@@ -43,5 +56,8 @@ ul {
       margin-top: -5px;
     }
   }
+}
+.one-country > img {
+  width: 300px;
 }
 </style>
