@@ -10,9 +10,10 @@
         </div>
       </div>
     </div>
-    <div class="pt-5">
+    <div class="py-5">
       <country-list />
     </div>
+    <footer-view />
   </div>
 </template>
 
@@ -20,13 +21,15 @@
 import CurrencyControllers from '@/components/CurrencyControllers'
 import MessageHeader from '@/components/MessageHeader'
 import CountryList from '@/components/CountryList'
+import FooterView from './Footer'
 
 export default {
   name: 'home',
   components: {
     CurrencyControllers,
     MessageHeader,
-    CountryList
+    CountryList,
+    FooterView
   }
 }
 </script>
