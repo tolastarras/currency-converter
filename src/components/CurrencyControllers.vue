@@ -1,18 +1,18 @@
 <template>
   <form class="mt-4">
     <div class="from-currency-js form-row mb-2">
-      <div class="col col-md-12 col-lg-7">
+      <div class="col col-md-12 col-lg-7 mb-1">
         <custom-select-box :currencyType="fromCurrency" />
       </div>
-      <div class="col col-md-12 col-lg-5">
+      <div class="col col-md-12 col-lg-5 mb-1">
         <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrency.amount">
       </div>
     </div>
     <div class="to-currency-js form-row">
-      <div class="col col-md-12 col-lg-7">
+      <div class="col col-md-12 col-lg-7 mb-1">
         <custom-select-box :currencyType="toCurrency" />
       </div>
-      <div class="col col-md-12 col-lg-5">
+      <div class="col col-md-12 col-lg-5 mb-1">
         <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrency.amount">
       </div>
     </div>

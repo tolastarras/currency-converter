@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <h5 class="text-primary">1 {{ fromCurrency.name }} equals</h5>
+    <h4 class="text-white">1 {{ fromCurrency.name }} equals</h4>
     <h1>{{ exchangeRate }} {{ toCurrency.name }}</h1>
-    <p class="text-muted">{{ currentDate }}</p>
+    <p class="text-warning">{{ currentDate }}</p>
   </div>
 </template>
 

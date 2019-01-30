@@ -6,7 +6,9 @@
       </h3>
       <ul class="list-inline text-left">
         <li class="list-inline-item col-md-6 col-xl-4" :key="country.name" v-for="country in currencyCountries">
-          <img :src="country.flag"> <span>{{ country.name }}</span>
+          <a :href="wikipediaLink(country.name)" target="__blank">
+            <img :src="country.flag"> <span>{{ country.name }}</span>
+          </a>
         </li>
       </ul>
     </div>
@@ -28,6 +30,11 @@ export default {
   computed: {
     ...mapState(['toCurrency']),
     ...mapGetters(['currencyCountries'])
+  },
+  methods: {
+    wikipediaLink (countryName) {
+      return `https://en.wikipedia.org/wiki/${countryName.replace(/\s/g, '_')}`
+    }
   }
 }
 </script>
@@ -49,11 +56,20 @@ ul {
     border-bottom: 1px dotted #bbb;
     padding-bottom: 0.4em;
 
-    > img {
-      width: 36px;
-      height: 26px;
-      margin-right: 10px;
-      margin-top: -5px;
+    > a {
+      color: #666;
+
+      &:hover {
+        color: #222;
+        text-decoration: none;
+      }
+
+      > img {
+        width: 36px;
+        height: 26px;
+        margin-right: 10px;
+        margin-top: -5px;
+      }
     }
   }
 }
