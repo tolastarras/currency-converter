@@ -7,17 +7,19 @@
       <ul class="list-inline text-left">
         <li class="list-inline-item col-md-6 col-xl-4" :key="country.name" v-for="country in currencyCountries">
           <a :href="wikipediaLink(country.name)" target="__blank">
-            <img :src="country.flag"> <span>{{ country.name }}</span>
+            <img :src="country.flag"> <span>{{ format(country.name) }}</span>
           </a>
         </li>
       </ul>
     </div>
     <div v-else>
       <h3 class="mb-5">
-        {{ currencyCountries[0].name }} is the only country accepting the {{ toCurrency.name }}
+        {{ format(currencyCountries[0].name) }} is the only country accepting the {{ toCurrency.name }}
       </h3>
       <div class="one-country">
-        <img :src="currencyCountries[0].flag">
+        <a :href="wikipediaLink(currencyCountries[0].name)" target="__blank">
+          <img :src="currencyCountries[0].flag">
+        </a>
       </div>
     </div>
   </div>
@@ -25,6 +27,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { formatCountryName } from '@/helpers/'
 
 export default {
   computed: {
@@ -34,6 +37,9 @@ export default {
   methods: {
     wikipediaLink (countryName) {
       return `https://en.wikipedia.org/wiki/${countryName.replace(/\s/g, '_')}`
+    },
+    format (name) {
+      return formatCountryName(name)
     }
   }
 }
