@@ -1,16 +1,18 @@
 <template>
   <div class="main-container text-center">
     <div class="header pt-5">
-      <div class="divider" :style="{ backgroundImage: 'url(' + require('@/assets/divider.svg') + ')' }"></div>
       <h1 class="text-warning">Currency Converter</h1>
+      <hr>
       <div class="pt-4">
         <message-header />
         <div class="container">
           <currency-controllers />
         </div>
       </div>
+      <!-- <img :style="{ backgroundImage: 'url(' + require('@/assets/curve.svg') + ')' }"> -->
+      <!-- <img :src="require('@/assets/curve.svg')" /> -->
     </div>
-    <div class="py-5">
+    <div class="country-list">
       <country-list />
     </div>
     <footer-view />
@@ -38,24 +40,18 @@ export default {
 // <polygon class="svg--sm" fill="#ddd" points="0,0 30,100 65,21 90,100 100,75 100,100 0,100"/>
 .header {
   background: linear-gradient(#ff6126, #ff922f);
-  padding-bottom: 8em;
+  padding-bottom: 5em;
   position: relative;
 }
 
 hr {
   margin: 2em auto;
-  background: #0089ff;
+  background: #ff922f;
   height: 2px !important;
-  width: 7em;
+  width: 5em;
 }
 
-.divider {
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  width: 100.06%;
-  /* drop the height to have a constant angle for all screen widths */
-  height: 100px;
+.country-list {
+  margin: 4em 0 6em 0;
 }
 </style>

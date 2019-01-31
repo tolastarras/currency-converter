@@ -27,12 +27,4 @@ body {
   background: #ddd !important;
   font-family: arial !important;
 }
-svg {
-  display: none;
-}
-@media (max-width: 700px) {
-  .svg--sm {
-    display: none;
-  }
-}
 </style>

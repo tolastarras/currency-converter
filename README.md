@@ -19,3 +19,5 @@ TODO:
 4. add helper to handle the isFromCurrency function
 5. app is calling updateExchangeRate twice for each request
 6. feature: allow user to type in custom select box to find currencies
+7. Wrap long country names like United Kingdom of Great Britain and Northern Ireland
+8. Rewrite countries like Korea (Republic of)
