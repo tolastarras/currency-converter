@@ -79,7 +79,7 @@ ul {
     }
   }
 }
-.one-country > img {
+.one-country img {
   width: 300px;
 }
 </style>

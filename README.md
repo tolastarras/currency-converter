@@ -20,4 +20,4 @@ TODO:
 5. app is calling updateExchangeRate twice for each request
 6. feature: allow user to type in custom select box to find currencies
 7. Wrap long country names like United Kingdom of Great Britain and Northern Ireland
-8. Rewrite countries like Korea (Republic of)
+8. Rewrite countries like Korea (Republic of) and Tanzania, United Republic of (WORKING BUT DOUBLE CHECK CODE FOR A BETTER SOLUTION)
