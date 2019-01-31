@@ -1,16 +1,19 @@
 <template>
-  <footer class="lead">
-    <div class="container text-white my-4 col-md-6">
+  <footer>
+    <div class="container my-4">
       <div class="fa fa-quote-left col-xs-1 text-warning"></div>
-      <div class="offset-xs-1 col-xs-4 mx-5 text-left">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi, in asperiores quos distinctio odio nobis nam commodi. Molestiae magni tempora consectetur, aperiam minima fugit omnis dolore alias laudantium optio architecto.</div>
+      <div class="quote text-left m-3"><h4>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi, in asperiores quos distinctio odio nobis nam commodi. <span>Molestiae magni tempora consectetur, aperiam minima fugit omnis dolore alias laudantium optio architecto.</span></h4>
+      </div>
       <div class="fa fa-quote-right col-xs-1 text-warning"></div>
     </div>
-    <div class="bio col-md-5 mt-5">
-      <img :src="require('@/assets/elephant.png')" />
-      <div class="text-left">
-        <h2 class="my-0">John Doe</h2>
-        <h5>Software Engineer</h5>
-      </div>
+    <div class="container">
+        <div class="bio">
+          <img :src="require('@/assets/elephant.png')" />
+          <div class="text-left">
+            <h2 class="my-0 text-white">John Doe</h2>
+            <h6>Software Engineer</h6>
+          </div>
+        </div>
     </div>
   </footer>
 </template>
@@ -32,27 +35,26 @@ footer {
     display: flex;
     position: relative;
 
+    .quote {
+      z-index: 1;
+    }
+
     .fa {
       font-size: 2em;
-      color: #aaa;
+      position: absolute;
 
       &:last-child {
         vertical-align: bottom;
-        position: absolute;
         bottom: 0;
-        right: 0;
+        right: 15px;
       }
-    }
-
-    span {
-      margin: 1em;
     }
   }
 
   .bio {
     display: flex;
-    margin: 0 auto;
-    padding: 0 1.8em;
+    margin: 0 0.5em;
+    color: #222;
 
     img {
       border-radius: 50%;
@@ -62,6 +64,18 @@ footer {
       background: #fff;
       margin-right: 1em;
     }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .container span {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .container {
+    padding: 0;
   }
 }
 </style>
