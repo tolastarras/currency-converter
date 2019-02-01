@@ -10,6 +10,6 @@ export default {
     isFromCurrency (target) {
       // find parent class of select option
       return target.closest('.form-row').classList.contains('from-currency-js')
-    }
+    }    
   }
 }

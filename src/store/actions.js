@@ -37,18 +37,13 @@ export default {
     commit('SET_TO_CURRENCY', { ...payload, amount: state.toCurrency.amount })
     dispatch('updateExchangeRate')
   },
-  async currencyPaylod ({ state, dispatch }, code) {
+  async currencyPaylod ({ state, dispatch, commit }, code) {
     // get currency index from currencies array by currency code
     let index = await dispatch('getCurrencyIndexByCurrencyCode', code)
     let currency = state.currencies[index]
 
     // initialize flag value
-    let flag = currency.countries[0].flag
-
-    // refactor into a function since it is duplicated on customSelectBox component
-    if (code.toLowerCase() === 'eur') {
-      flag = require('@/assets/flags/europe.svg')
-    }
+    let flag = dispatch.currencyFlag(currency)
 
     return { ...currency, flag }
   },

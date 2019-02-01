@@ -5,32 +5,29 @@
     </button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
       <button @click="handleClick" class="dropdown-item" type="button" v-for="currency in currencies" :key="currency.code" :value="currency.code" :class="currency.code === currencyType.code ? 'selected' : ''">
-        <img :src="flag(currency)">{{ currency.name }}<span>{{ currency.code }}</span>
+        <img :src="currencyFlag(currency)">{{ currency.name }}<span>{{ currency.code }}</span>
       </button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   props: {
     currencyType: Object
   },
-  computed: mapState(['currencies']),
+  computed: {
+    ...mapState(['currencies']),
+    ...mapGetters(['currencyFlag'])
+  },
   methods: {
     handleClick ({ target }) {
       // method name based on drop box selected
       let method = (this.$root.isFromCurrency(target) ? 'updateFromCurrencyByCode' : 'updateToCurrencyByCode')
 
       this.$store.dispatch(method, target.value)
-    },
-    flag (currency) {
-      if (currency.code.toLowerCase() === 'eur') {
-        return require('@/assets/flags/europe.svg')
-      }
-      return currency.countries[0].flag
     }
   }
 }
