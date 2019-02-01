@@ -10,6 +10,7 @@
         </a>
       </div>
     </div>
+    <!-- v-else generates an error because it triggers prior to currencyCountries being loaded (when its length is zero). -->
     <div v-else-if="currencyCountries.length > 1">
       <h3 class="mb-4">
         There are {{ currencyCountries.length }} Countries accepting the {{ toCurrency.name }}
@@ -27,7 +28,6 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { formatCountryName } from '@/helpers/'
 
 export default {
   computed: {
@@ -39,7 +39,7 @@ export default {
       return `https://en.wikipedia.org/wiki/${countryName.replace(/\s/g, '_')}`
     },
     format (name) {
-      return formatCountryName(name)
+      return this.$root.formatCountryName(name)
     }
   }
 }

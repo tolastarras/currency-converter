@@ -22,13 +22,9 @@ export default {
   methods: {
     handleClick ({ target }) {
       // method name based on drop box selected
-      let method = (this.isFromCurrency(target) ? 'updateFromCurrencyByCode' : 'updateToCurrencyByCode')
+      let method = (this.$root.isFromCurrency(target) ? 'updateFromCurrencyByCode' : 'updateToCurrencyByCode')
 
       this.$store.dispatch(method, target.value)
-    },
-    isFromCurrency (target) {
-      // find parent class of select option
-      return target.closest('.form-row').classList.contains('from-currency-js')
     },
     flag (currency) {
       if (currency.code.toLowerCase() === 'eur') {

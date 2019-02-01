@@ -32,7 +32,7 @@ export default {
     handleKeyPress (e) {
       // handle both text boxes
       // let className = '.' + (e.target.parentNode.parentNode.classList.contains('from-currency-js') ? 'from-currency-js' : 'to-currency-js')
-      let className = '.' + (this.isFromCurrency(e.target) ? 'from-currency-js' : 'to-currency-js')
+      let className = '.' + (this.$root.isFromCurrency(e.target) ? 'from-currency-js' : 'to-currency-js')
 
       let input = document.querySelector(className + ' input').value
       let validKey = /[\d|.]/
@@ -44,7 +44,7 @@ export default {
     },
     handleInputChange ({ target }) {
       // method name based on drop box selected
-      let method = (this.isFromCurrency(target) ? 'updateFromCurrencyAmount' : 'updateToCurrencyAmount')
+      let method = (this.$root.isFromCurrency(target) ? 'updateFromCurrencyAmount' : 'updateToCurrencyAmount')
 
       this.$store.dispatch(method, target.value)
     },
@@ -54,10 +54,6 @@ export default {
 
       // update state
       this.$store.dispatch(method, target.value)
-    },
-    isFromCurrency (target) {
-      // find parent class of select option
-      return target.closest('.form-row').classList.contains('from-currency-js')
     }
   },
   computed: {

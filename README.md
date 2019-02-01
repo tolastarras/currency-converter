@@ -13,7 +13,6 @@ https://medium.freecodecamp.org/how-to-master-async-await-with-this-real-world-e
 December 25, 2018
 
 TODO:
-1. The line currency.countries[0].flag generates an error on currencyPaylod from API
 2. Refactor loadCurrencies function
 4. add helper to handle the isFromCurrency function
 5. app is calling updateExchangeRate twice for each request

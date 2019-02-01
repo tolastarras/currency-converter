@@ -1,6 +1,5 @@
 import Axios from 'axios'
 import stringSimilarity from 'string-similarity'
-import { formatCountryName } from '@/helpers'
 
 export default {
   async init ({ state, dispatch }) {
@@ -70,7 +69,7 @@ export default {
       response.data.map(country => {
         country.currencies.map(currency => {
           // initialize additional fields
-          currency = { ...currency, 'countries': [{ name: formatCountryName(country.name), flag: country.flag }] }
+          currency = { ...currency, 'countries': [{ name: this.$root.formatCountryName(country.name), flag: country.flag }] }
           // discard currencies with empty or invalid codes
           if (currency.code && currency.code !== '(none)') {
             // discard duplicate currencies: add currency to currencies array or countries to currency countries array if currency already in array.
