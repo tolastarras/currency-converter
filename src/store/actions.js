@@ -3,9 +3,9 @@ import stringSimilarity from 'string-similarity'
 import { formatCountryName } from '@/helpers'
 
 export default {
-  init ({ state, dispatch }) {
+  async init ({ state, dispatch }) {
     // load currencies from local storage or api
-    dispatch('loadCurrencies')
+    await dispatch('loadCurrencies')
     // initialize extra values to the fromCurrency and toCurrency objects
     dispatch('updateFromCurrencyByCode', state.fromCurrency.code)
     dispatch('updateToCurrencyByCode', state.toCurrency.code)
@@ -44,7 +44,6 @@ export default {
     let currency = state.currencies[index]
 
     // initialize flag value
-    // TODO: The line below GENERATES AN ERROR FIRST TIME ON LOADCURRENCIES
     let flag = currency.countries[0].flag
 
     // refactor into a function since it is duplicated on customSelectBox component
@@ -74,13 +73,8 @@ export default {
           currency = { ...currency, 'countries': [{ name: formatCountryName(country.name), flag: country.flag }] }
           // discard currencies with empty or invalid codes
           if (currency.code && currency.code !== '(none)') {
-            // Add currency to currencies array or countries to currency countries array if currency already in array.
-            // discard duplicate currencies
-            let index = state.currencies.findIndex(element => {
-              return element.code === currency.code
-            })
-
-            // currency found at position index
+            // discard duplicate currencies: add currency to currencies array or countries to currency countries array if currency already in array.
+            let index = state.currencies.findIndex(element => element.code === currency.code)
             if (index > 0) {
               let payload = { name: country.name, flag: country.flag }
               // add country to currency countries array

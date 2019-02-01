@@ -13,11 +13,10 @@ https://medium.freecodecamp.org/how-to-master-async-await-with-this-real-world-e
 December 25, 2018
 
 TODO:
-1. The line currency.countries[0].flag generates an error on loadCurrencies from API
+1. The line currency.countries[0].flag generates an error on currencyPaylod from API
 2. Refactor loadCurrencies function
-3. style page
 4. add helper to handle the isFromCurrency function
 5. app is calling updateExchangeRate twice for each request
 6. feature: allow user to type in custom select box to find currencies
-7. Wrap long country names like United Kingdom of Great Britain and Northern Ireland
+7. Do not wrap long country names like United Kingdom of Great Britain and Northern Ireland around the flag in the country list.
 8. Rewrite countries like Korea (Republic of) and Tanzania, United Republic of (WORKING BUT DOUBLE CHECK CODE FOR A BETTER SOLUTION)

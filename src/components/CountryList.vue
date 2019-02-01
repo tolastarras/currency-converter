@@ -1,6 +1,16 @@
 <template>
   <div class="container">
-    <div v-if="currencyCountries.length > 1">
+    <div v-if="currencyCountries.length === 1">
+      <h3 class="mb-5">
+        {{ format(currencyCountries[0].name) }} is the only country accepting the {{ toCurrency.name }}
+      </h3>
+      <div class="one-country">
+        <a :href="wikipediaLink(currencyCountries[0].name)" target="__blank">
+          <img :src="currencyCountries[0].flag">
+        </a>
+      </div>
+    </div>
+    <div v-else-if="currencyCountries.length > 1">
       <h3 class="mb-4">
         There are {{ currencyCountries.length }} Countries accepting the {{ toCurrency.name }}
       </h3>
@@ -11,16 +21,6 @@
           </a>
         </li>
       </ul>
-    </div>
-    <div v-else>
-      <h3 class="mb-5">
-        {{ format(currencyCountries[0].name) }} is the only country accepting the {{ toCurrency.name }}
-      </h3>
-      <div class="one-country">
-        <a :href="wikipediaLink(currencyCountries[0].name)" target="__blank">
-          <img :src="currencyCountries[0].flag">
-        </a>
-      </div>
     </div>
   </div>
 </template>
