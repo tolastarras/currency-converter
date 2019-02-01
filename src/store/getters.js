@@ -8,13 +8,5 @@ export default {
     })
 
     return countries
-  },
-  currencyFlag (currency) {
-    console.log('CURRENCY:', currency)
-    // if (currency.code.toLowerCase() === 'eur') {
-    //   return require('@/assets/flags/europe.svg')
-    // }
-
-    return 'test' //currency.countries[0].flag
-  }  
+  }
 }

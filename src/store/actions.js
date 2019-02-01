@@ -11,22 +11,6 @@ export default {
     // exchange rate for the default currencies USD to EUR
     dispatch('updateExchangeRate')
   },
-  updateFromCurrency ({ commit, dispatch }, currency) {
-    commit('SET_FROM_CURRENCY', currency)
-    dispatch('updateExchangeRate')
-  },
-  updateToCurrency ({ commit, dispatch }, code) {
-    commit('SET_TO_CURRENCY', code)
-    dispatch('updateExchangeRate')
-  },
-  updateFromCurrencyName ({ state, commit }, code) {
-    let currency = state.currencies.filter(currency => currency.code === code)
-    commit('SET_FROM_CURRENCY_NAME', currency[0].name)
-  },
-  updateToCurrencyName ({ state, commit }, code) {
-    let currency = state.currencies.filter(currency => currency.code === code)
-    commit('SET_TO_CURRENCY_NAME', currency[0].name)
-  },
   async updateFromCurrencyByCode ({ state, commit, dispatch }, code) {
     let payload = await dispatch('currencyPaylod', code)
     commit('SET_FROM_CURRENCY', { ...payload, amount: state.fromCurrency.amount })
@@ -37,21 +21,11 @@ export default {
     commit('SET_TO_CURRENCY', { ...payload, amount: state.toCurrency.amount })
     dispatch('updateExchangeRate')
   },
-  async currencyPaylod ({ state, dispatch, commit }, code) {
+  async currencyPaylod ({ state, dispatch }, code) {
     // get currency index from currencies array by currency code
     let index = await dispatch('getCurrencyIndexByCurrencyCode', code)
-    let currency = state.currencies[index]
 
-    // initialize flag value
-    let flag = dispatch.currencyFlag(currency)
-
-    return { ...currency, flag }
-  },
-  updateFromCurrencyAmount ({ commit, dispatch }, amount) {
-    dispatch('convertToCurrency', amount)
-  },
-  updateToCurrencyAmount ({ commit, dispatch }, amount) {
-    dispatch('convertFromCurrency', amount)
+    return state.currencies[index]
   },
   /**
    * Load currencies on app init from localStorage or API if the localStorage is empty.
@@ -89,6 +63,60 @@ export default {
       commit('SET_CURRENCIES', JSON.parse(localStorage.getItem('currencies')))
     }
   },
+  async updateExchangeRate ({ state, commit, dispatch }) {
+    const url = `http://free.currencyconverterapi.com/api/v5/convert?q=${state.fromCurrency.code}_${state.toCurrency.code}&compact=y`
+    const response = await Axios.get(url)
+    const exchangeRate = response.data[`${state.fromCurrency.code}_${state.toCurrency.code}`].val
+
+    // random decimal for testing purposes
+    commit('SET_EXCHANGE_RATE', Math.random() * exchangeRate)
+    dispatch('convertToCurrency', state.fromCurrency.amount)
+  },
+  updateFromCurrency ({ commit, dispatch }, currency) {
+    commit('SET_FROM_CURRENCY', currency)
+    dispatch('updateExchangeRate')
+  },
+  updateToCurrency ({ commit, dispatch }, code) {
+    commit('SET_TO_CURRENCY', code)
+    dispatch('updateExchangeRate')
+  },
+  updateFromCurrencyName ({ state, commit }, code) {
+    let currency = state.currencies.filter(currency => currency.code === code)
+    commit('SET_FROM_CURRENCY_NAME', currency[0].name)
+  },
+  updateToCurrencyName ({ state, commit }, code) {
+    let currency = state.currencies.filter(currency => currency.code === code)
+    commit('SET_TO_CURRENCY_NAME', currency[0].name)
+  },
+  updateFromCurrencyAmount ({ commit, dispatch }, amount) {
+    dispatch('convertToCurrency', amount)
+  },
+  updateToCurrencyAmount ({ commit, dispatch }, amount) {
+    dispatch('convertFromCurrency', amount)
+  },
+  convertFromCurrency ({ state, commit }, amount) {
+    let convertedAmount = amount / state.exchangeRate
+    commit('SET_FROM_CURRENCY_AMOUNT', convertedAmount)
+    commit('SET_TO_CURRENCY_AMOUNT', amount)
+  },
+  convertToCurrency ({ state, commit }, amount) {
+    let convertedAmount = amount * state.exchangeRate
+    commit('SET_FROM_CURRENCY_AMOUNT', amount)
+    commit('SET_TO_CURRENCY_AMOUNT', convertedAmount)
+  },
+  getCurrencyIndexByCurrencyCode ({ state }, code) {
+    return state.currencies.findIndex(currency => currency.code === code)
+  },
+  getMainCountryByCurrencyCode ({ state }, code) {
+    let country
+    state.currencies.find(currency => {
+      if (currency.code === code) {
+        country = currency.countries[0]
+      }
+    })
+
+    return country
+  },
   /**
    * Move main flag in front of array for easier handling.
    * for example: United States flag for USD currencies
@@ -113,37 +141,5 @@ export default {
 
     // find country in array of countries
     return countries.findIndex(country => country === possibleCountry)
-  },
-  async updateExchangeRate ({ state, commit, dispatch }) {
-    const url = `http://free.currencyconverterapi.com/api/v5/convert?q=${state.fromCurrency.code}_${state.toCurrency.code}&compact=y`
-    const response = await Axios.get(url)
-    const exchangeRate = response.data[`${state.fromCurrency.code}_${state.toCurrency.code}`].val
-
-    // random decimal for testing purposes
-    commit('SET_EXCHANGE_RATE', exchangeRate)
-    dispatch('convertToCurrency', state.fromCurrency.amount)
-  },
-  async convertFromCurrency ({ state, commit }, amount) {
-    let convertedAmount = amount / state.exchangeRate
-    commit('SET_FROM_CURRENCY_AMOUNT', convertedAmount)
-    commit('SET_TO_CURRENCY_AMOUNT', amount)
-  },
-  async convertToCurrency ({ state, commit }, amount) {
-    let convertedAmount = amount * state.exchangeRate
-    commit('SET_FROM_CURRENCY_AMOUNT', amount)
-    commit('SET_TO_CURRENCY_AMOUNT', convertedAmount)
-  },
-  getCurrencyIndexByCurrencyCode ({ state }, code) {
-    return state.currencies.findIndex(currency => currency.code === code)
-  },
-  getMainCountryByCurrencyCode ({ state }, code) {
-    let country
-    state.currencies.find(currency => {
-      if (currency.code === code) {
-        country = currency.countries[0]
-      }
-    })
-
-    return country
   }
 }

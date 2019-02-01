@@ -42,13 +42,13 @@ export default {
   background: linear-gradient(#ff6126, #ff922f);
   padding-bottom: 5em;
   position: relative;
-}
 
-hr {
-  margin: 2em auto;
-  background: #ff922f;
-  height: 2px !important;
-  width: 5em;
+  hr {
+    margin: 1.3em auto;
+    background: #ffc107;
+    height: 1px;
+    width: 5em;
+  }
 }
 
 .country-list {
