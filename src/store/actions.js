@@ -69,7 +69,7 @@ export default {
     const exchangeRate = response.data[`${state.fromCurrency.code}_${state.toCurrency.code}`].val
 
     // random decimal for testing purposes
-    commit('SET_EXCHANGE_RATE', Math.random() * exchangeRate)
+    commit('SET_EXCHANGE_RATE', exchangeRate)
     dispatch('convertToCurrency', state.fromCurrency.amount)
   },
   updateFromCurrency ({ commit, dispatch }, currency) {

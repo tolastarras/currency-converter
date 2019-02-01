@@ -15,7 +15,6 @@ December 25, 2018
 TODO:
 1. United State Dollar (change to United States Dollar on loadCurrencies)
 2. Refactor loadCurrencies function
-3. Remove flag initialization in currencyPaylod
 4. add helper to handle the isFromCurrency function
 5. app is calling updateExchangeRate twice for each request
 6. feature: allow user to type in custom select box to find currencies
