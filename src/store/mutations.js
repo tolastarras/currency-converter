@@ -11,7 +11,11 @@ export default {
   SET_TO_CURRENCY_AMOUNT (state, amount) {
     state.toCurrency.amount = amount
   },
-  SET_CURRENCIES (state, items) {
+  SET_CURRENCIES (state, currencies) {
+    state.currencies = currencies
+  },
+  SORT_CURRENCIES (state) {
+    let items = state.currencies
     // sort currencies in asc order
     state.currencies = items.sort((a, b) => a.name < b.name ? -1 : 1)
   },

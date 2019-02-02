@@ -62,6 +62,9 @@ export default {
       // bring main currency country to the front of the currency.countries array
       await dispatch('rearrangeArray')
 
+      // sort currencies
+      commit('SORT_CURRENCIES')
+
       // set local storage so on the next call no api call is required
       localStorage.setItem('currencies', JSON.stringify(state.currencies))
     } else {
