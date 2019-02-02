@@ -50,7 +50,7 @@ export default {
     },
     handleSelectChange ({ target }) {
       // method name based on select box selected
-      let method = (this.isFromCurrency(target) ? 'updateFromCurrency' : 'updateToCurrency')
+      let method = (this.$root.isFromCurrency(target) ? 'updateFromCurrency' : 'updateToCurrency')
 
       // update state
       this.$store.dispatch(method, target.value)

@@ -1,6 +1,6 @@
 export default {
   created () {
-    console.log('mixin helper ...')
+    // console.log('mixin helper ...')
   },
   methods: {
     formatCountryName (value) {
@@ -10,6 +10,6 @@ export default {
     isFromCurrency (target) {
       // find parent class of select option
       return target.closest('.form-row').classList.contains('from-currency-js')
-    }    
+    }
   }
 }

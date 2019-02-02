@@ -32,13 +32,12 @@ export default {
    */
   async loadCurrencies ({ state, dispatch, commit }) {
     if (!localStorage.getItem('currencies')) {
-      console.log('loading currencies from API ...')
       // load currencies from api
       const response = await Axios.get('https://restcountries.eu/rest/v2/all?fields=name;flag;currencies')
       response.data.map(country => {
         country.currencies.map(currency => {
           // initialize additional fields
-          currency = { ...currency, 'countries': [{ name: this.$root.formatCountryName(country.name), flag: country.flag }] }
+          currency = { ...currency, countries: [{ name: country.name, flag: country.flag }] }
           // discard currencies with empty or invalid codes
           if (currency.code && currency.code !== '(none)') {
             // discard duplicate currencies: add currency to currencies array or countries to currency countries array if currency already in array.
@@ -55,6 +54,12 @@ export default {
         })
       })
 
+      // usa currency name is incorrectly written for American Samoa in the API. Since it is the first country in the response array to use
+      // the USD currency, it is automatically chosen to fill the USD currency name. Must change this value manually.
+      let index = await dispatch('getCurrencyIndexByCurrencyCode', 'USD')
+      commit('SET_CURRENCY_NAME_BY_INDEX', { index, name: 'United States Dollar' })
+
+      // bring main currency country to the front of the currency.countries array
       await dispatch('rearrangeArray')
 
       // set local storage so on the next call no api call is required
@@ -64,13 +69,17 @@ export default {
     }
   },
   async updateExchangeRate ({ state, commit, dispatch }) {
-    const url = `http://free.currencyconverterapi.com/api/v5/convert?q=${state.fromCurrency.code}_${state.toCurrency.code}&compact=y`
-    const response = await Axios.get(url)
-    const exchangeRate = response.data[`${state.fromCurrency.code}_${state.toCurrency.code}`].val
+    try {
+      const url = `http://free.currencyconverterapi.com/api/v5/convert?q=${state.fromCurrency.code}_${state.toCurrency.code}&compact=y`
+      const response = await Axios.get(url)
+      const exchangeRate = response.data[`${state.fromCurrency.code}_${state.toCurrency.code}`].val
 
-    // random decimal for testing purposes
-    commit('SET_EXCHANGE_RATE', exchangeRate)
-    dispatch('convertToCurrency', state.fromCurrency.amount)
+      // random decimal for testing purposes
+      commit('SET_EXCHANGE_RATE', exchangeRate)
+      dispatch('convertToCurrency', state.fromCurrency.amount)
+    } catch (err) {
+      console.log(err)
+    }
   },
   updateFromCurrency ({ commit, dispatch }, currency) {
     commit('SET_FROM_CURRENCY', currency)

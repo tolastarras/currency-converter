@@ -29,7 +29,7 @@ footer {
   font-family: 'Segoe UI', Verdana, sans-serif;
   font-size: 1.5em;
   padding: 1em;
-  border-top-right-radius: 120px;
+  // border-top-right-radius: 120px;
 
   > .container {
     display: flex;

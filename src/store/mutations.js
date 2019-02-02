@@ -36,5 +36,11 @@ export default {
     let allCountries = state.currencies[currencyIndex].countries
     allCountries[countryIndex] = allCountries[0]
     allCountries[0] = country
+  },
+  /**
+   * Set the currency name of a currency in the currencies array at index currencyIndex
+   */
+  SET_CURRENCY_NAME_BY_INDEX (state, { index, name }) {
+    state.currencies[index].name = name
   }
 }
