@@ -64,7 +64,6 @@ export default {
 
 <style lang="scss" scoped>
 input {
-  min-height: 40px;
   color: orangered;
   font-size: 1.5em;
   font-weight: 500;

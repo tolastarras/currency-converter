@@ -52,6 +52,7 @@ button {
   font-size: 1.1em;
   padding-left: .7em;
   background: #fff;
+  line-height: 24px;
 
   > img {
     height: 20px;
