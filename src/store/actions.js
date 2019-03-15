@@ -1,20 +1,23 @@
 import Axios from 'axios'
 import stringSimilarity from 'string-similarity'
+import CurrencyExchangeService from '@/services/CurrencyExchangeService'
 
 export default {
   async init ({ state, dispatch }) {
     // load currencies from local storage or api
     await dispatch('loadCurrencies')
+
     // initialize extra values to the fromCurrency and toCurrency objects
     dispatch('updateFromCurrencyByCode', state.fromCurrency.code)
     dispatch('updateToCurrencyByCode', state.toCurrency.code)
-    // exchange rate for the default currencies USD to EUR
-    dispatch('updateExchangeRate')
   },
   async updateFromCurrencyByCode ({ state, commit, dispatch }, code) {
     let payload = await dispatch('currencyPaylod', code)
     commit('SET_FROM_CURRENCY', { ...payload, amount: state.fromCurrency.amount })
-    dispatch('updateExchangeRate')
+    // do not run on init to avoid multiple api requests
+    if (state.toCurrency.amount) {
+      dispatch('updateExchangeRate')
+    }
   },
   async updateToCurrencyByCode ({ state, commit, dispatch }, code) {
     let payload = await dispatch('currencyPaylod', code)
@@ -73,11 +76,12 @@ export default {
   },
   async updateExchangeRate ({ state, commit, dispatch }) {
     try {
-      const url = `http://free.currencyconverterapi.com/api/v5/convert?q=${state.fromCurrency.code}_${state.toCurrency.code}&compact=y`
-      const response = await Axios.get(url)
-      const exchangeRate = response.data[`${state.fromCurrency.code}_${state.toCurrency.code}`].val
+      const baseCode = state.fromCurrency.code.toLowerCase()
+      const toCode = state.toCurrency.code.toLowerCase()
 
-      // random decimal for testing purposes
+      let exchangeRate = await CurrencyExchangeService.exchangeRate(baseCode, toCode)
+        .then(response => response.data.rate.toFixed(4))
+
       commit('SET_EXCHANGE_RATE', exchangeRate)
       dispatch('convertToCurrency', state.fromCurrency.amount)
     } catch (err) {
@@ -86,11 +90,11 @@ export default {
   },
   updateFromCurrency ({ commit, dispatch }, currency) {
     commit('SET_FROM_CURRENCY', currency)
-    dispatch('updateExchangeRate')
+    // dispatch('updateExchangeRate')
   },
   updateToCurrency ({ commit, dispatch }, code) {
     commit('SET_TO_CURRENCY', code)
-    dispatch('updateExchangeRate')
+    // dispatch('updateExchangeRate')
   },
   updateFromCurrencyName ({ state, commit }, code) {
     let currency = state.currencies.filter(currency => currency.code === code)

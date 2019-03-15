@@ -1,3 +1,3 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/projects/currency-converter' : '/'
+  publicPath: process.env.NODE_ENV === 'development' ? '/' : '/projects/currency-converter'
 }

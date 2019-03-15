@@ -1,7 +1,4 @@
 export default {
-  created () {
-    // console.log('mixin helper ...')
-  },
   methods: {
     formatCountryName (value) {
       if (!value) return
@@ -10,6 +7,14 @@ export default {
     isFromCurrency (target) {
       // find parent class of select option
       return target.closest('.form-row').classList.contains('from-currency-js')
+    },
+    currentDate () {
+      const today = new Date()
+      const day = (today.getDate() < 10 ? '0' : '') + today.getDate().toString()
+      const month = (today.getMonth() + 1 < 10 ? '0' : '') + (today.getMonth() + 1).toString()
+      const year = today.getFullYear()
+
+      return year + '-' + month + '-' + day
     }
   }
 }
