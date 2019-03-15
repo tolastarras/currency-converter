@@ -1,6 +1,5 @@
-import Axios from 'axios'
 import stringSimilarity from 'string-similarity'
-import CurrencyExchangeService from '@/services/CurrencyExchangeService'
+import CurrencyExchange from '@/classes/CurrencyExchangeClass'
 
 export default {
   async init ({ state, dispatch }) {
@@ -36,7 +35,10 @@ export default {
   async loadCurrencies ({ state, dispatch, commit }) {
     if (!localStorage.getItem('currencies')) {
       // load currencies from api
-      const response = await Axios.get('https://restcountries.eu/rest/v2/all?fields=name;flag;currencies')
+      console.log('load currencies from api')
+      const currency = new CurrencyExchange(process.env.VUE_APP_COUNTRIES_API_URL)
+      const response = await currency.loadCountriesData()
+
       response.data.map(country => {
         country.currencies.map(currency => {
           // initialize additional fields
@@ -79,7 +81,9 @@ export default {
       const baseCode = state.fromCurrency.code.toLowerCase()
       const toCode = state.toCurrency.code.toLowerCase()
 
-      let exchangeRate = await CurrencyExchangeService.exchangeRate(baseCode, toCode)
+      const currency = new CurrencyExchange(process.env.VUE_APP_CURRENCIES_API_URL)
+
+      let exchangeRate = await currency.exchangeRate(baseCode, toCode)
         .then(response => response.data.rate.toFixed(4))
 
       commit('SET_EXCHANGE_RATE', exchangeRate)
