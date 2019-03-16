@@ -1,0 +1,43 @@
+.one-country img {
+  width: 300px;
+}
+
+ul {
+  display: flex;
+  flex-wrap: wrap;
+
+  > li {
+    list-style: none;
+    font-size: 1.2em;
+    margin-right: 0 !important;
+    margin-top: 0.8em;
+    padding-left: 0;
+    vertical-align: middle;
+    background-color: $bg_primary;
+    border-bottom: 1px dotted $color3;
+    padding-bottom: 0.4em;
+
+    > a {
+      color: $color4;
+      display: flex;
+      align-items: center;
+      font-weight: 400;
+
+      &:hover {
+        color: darken($color4, 10%);
+        text-decoration: none;
+      }
+
+      span {
+        line-height: 1em;
+      }
+
+      > img {
+        width: 36px;
+        height: 26px;
+        margin-right: 10px;
+        margin-top: -5px;
+      }
+    }
+  }
+}

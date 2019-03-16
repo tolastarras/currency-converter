@@ -6,7 +6,7 @@
       <div class="pt-4">
         <message-header />
         <div class="container">
-          <currency-controllers />
+          <currency-selectors />
         </div>
       </div>
       <!-- <img :style="{ backgroundImage: 'url(' + require('@/assets/curve.svg') + ')' }"> -->
@@ -20,15 +20,15 @@
 </template>
 
 <script>
-import CurrencyControllers from '@/components/CurrencyControllers'
+import CurrencySelectors from '@/components/CurrencySelectors'
 import MessageHeader from '@/components/MessageHeader'
 import CountryList from '@/components/CountryList'
-import FooterView from './Footer'
+import FooterView from '@/components/Footer'
 
 export default {
   name: 'home',
   components: {
-    CurrencyControllers,
+    CurrencySelectors,
     MessageHeader,
     CountryList,
     FooterView
@@ -37,21 +37,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// <polygon class="svg--sm" fill="#ddd" points="0,0 30,100 65,21 90,100 100,75 100,100 0,100"/>
-.header {
-  background: linear-gradient(#ff6126, #ff922f);
-  padding-bottom: 5em;
-  position: relative;
-
-  hr {
-    margin: 1.3em auto;
-    background: #ffc107;
-    height: 1px;
-    width: 5em;
-  }
-}
-
-.country-list {
-  margin: 4em 0 6em 0;
-}
+@import '@/styles/views/home.scss';
 </style>

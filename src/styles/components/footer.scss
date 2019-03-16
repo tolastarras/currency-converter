@@ -1,0 +1,54 @@
+footer {
+  background: linear-gradient(to bottom, #ff7c2f, #ff6126);
+  font-family: 'Segoe UI', Verdana, sans-serif;
+  font-size: 1.5em;
+  padding: 1em;
+  // border-top-right-radius: 120px;
+
+  > .container {
+    display: flex;
+    position: relative;
+
+    .quote {
+      z-index: 1;
+    }
+
+    .fa {
+      font-size: 2em;
+      position: absolute;
+
+      &:last-child {
+        vertical-align: bottom;
+        bottom: 0;
+        right: 15px;
+      }
+    }
+  }
+
+  .bio {
+    display: flex;
+    margin: 0 0.5em;
+    color: #222;
+
+    img {
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      padding: 10px;
+      background: #fff;
+      margin-right: 1em;
+    }
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .container span {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .container {
+    padding: 0;
+  }
+}

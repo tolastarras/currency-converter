@@ -45,47 +45,6 @@ export default {
 }
 </script>
 
-<style lang="scss">
-ul {
-  display: flex;
-  flex-wrap: wrap;
-
-  > li {
-    list-style: none;
-    font-size: 1.2em;
-    margin-right: 0 !important;
-    margin-top: 0.8em;
-    padding-left: 0;
-    // height: 3em;
-    vertical-align: middle;
-    background-color: #ddd;
-    border-bottom: 1px dotted #bbb;
-    padding-bottom: 0.4em;
-
-    > a {
-      color: #666;
-      display: flex;
-      align-items: center;
-
-      &:hover {
-        color: #222;
-        text-decoration: none;
-      }
-
-      span {
-        line-height: 1em;
-      }
-
-      > img {
-        width: 36px;
-        height: 26px;
-        margin-right: 10px;
-        margin-top: -5px;
-      }
-    }
-  }
-}
-.one-country img {
-  width: 300px;
-}
+<style lang="scss" scoped>
+@import '@/styles/components/country-list.scss';
 </style>

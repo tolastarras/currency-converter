@@ -56,16 +56,10 @@ export default {
       this.$store.dispatch(method, target.value)
     }
   },
-  computed: {
-    ...mapState(['fromCurrency', 'toCurrency', 'currencies', 'exchangeRate'])
-  }
+  computed: mapState(['fromCurrency', 'toCurrency', 'currencies', 'exchangeRate'])
 }
 </script>
 
 <style lang="scss" scoped>
-input {
-  color: orangered;
-  font-size: 1.5em;
-  font-weight: 500;
-}
+@import '@/styles/components/currency-selectors.scss';
 </style>

@@ -21,10 +21,3 @@ export default {
   computed: mapState(['currencies'])
 }
 </script>
-
-<style lang="scss">
-body {
-  background: #ddd !important;
-  font-family: arial !important;
-}
-</style>

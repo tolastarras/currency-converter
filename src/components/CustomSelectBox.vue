@@ -41,46 +41,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-span {
-  font-family: monospace;
-  font-size: 1.2em;
-  font-weight: bold;
-  float: right;
-}
-
-button {
-  font-size: 1.1em;
-  padding-left: .7em;
-  background: #fff;
-  line-height: 24px;
-
-  > img {
-    height: 20px;
-    width: 30px;
-    margin-top: -6px;
-    margin-right: 10px;
-  }
-
-  span > i {
-    vertical-align: bottom !important;
-  }
-}
-
-.btn-select {
-  border: 1px solid #ccc;
-  text-align: left;
-  padding-left: .7em;
-  width: 100%;
-}
-
-.dropdown-menu {
-  height: 30vh;
-  width: 100%;
-  overflow-y: scroll;
-
-  > button:hover, .selected {
-    background: #17a2b8;
-    color: #fff;
-  }
-}
+@import '@/styles/components/custom-select-box.scss';
 </style>
