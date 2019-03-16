@@ -9,11 +9,6 @@ class CurrencyExchange {
         'Content-Type': 'application/json'
       }
     })
-
-    this.methods = {
-      currencies: ['exchangeRate'],
-      countries: ['loadCountries']
-    }
   }
 
   exchangeRate (base, toCurrency) {

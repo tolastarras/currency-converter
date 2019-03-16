@@ -3,13 +3,12 @@ import CurrencyExchange from '@/classes/CurrencyExchangeClass'
 
 export default {
   async init ({ state, dispatch }) {
-    console.log('init...')
     // load currencies from local storage or api
     await dispatch('loadCurrencies')
 
     // initialize extra values to the fromCurrency and toCurrency objects
-    // dispatch('updateFromCurrencyByCode', state.fromCurrency.code)
-    // dispatch('updateToCurrencyByCode', state.toCurrency.code)
+    dispatch('updateFromCurrencyByCode', state.fromCurrency.code)
+    dispatch('updateToCurrencyByCode', state.toCurrency.code)
   },
   async updateFromCurrencyByCode ({ state, commit, dispatch }, code) {
     let payload = await dispatch('currencyPayload', code)
@@ -34,11 +33,9 @@ export default {
    * Load currencies on app init from localStorage or API if the localStorage is empty.
    */
   async loadCurrencies ({ state, dispatch, commit }) {
-    console.log('load currencies ...')
     if (!localStorage.getItem('currencies')) {
       // load currencies from api
-      console.log('load currencies from api >>>')
-      dispatch('loadDataFromApi')
+      await dispatch('loadDataFromApi')
 
       // set local storage so on the next call no api call is required
       localStorage.setItem('currencies', JSON.stringify(state.currencies))
@@ -49,38 +46,35 @@ export default {
   async loadDataFromApi ({ state, commit, dispatch }) {
     const currency = new CurrencyExchange(process.env.VUE_APP_COUNTRIES_API_URL)
     const response = await currency.loadCountriesData()
-    console.log(response)
 
     response.data.map(country => {
       country.currencies.map(currency => {
-        // initialize additional fields
-        currency = { ...currency, countries: [{ name: country.name, flag: country.flag }] }
         // discard currencies with empty or invalid codes
         if (currency.code && currency.code !== '(none)') {
-          // discard duplicate currencies: add currency to currencies array or countries to currency countries array if currency already in array.
+          let payload = { name: country.name, flag: country.flag }
+          // discard duplicate currencies
           let index = state.currencies.findIndex(element => element.code === currency.code)
           if (index > 0) {
-            let payload = { name: country.name, flag: country.flag }
-            // add country to currency countries array
+            // in the countries array; add country to currency countries array
             commit('PUSH_TO_COUNTRIES', { index, payload })
           } else {
-            // currency not in the array yet
-            commit('PUSH_CURRENCY', currency)
+            // currency not in the array yet; initialize country name and flag
+            commit('PUSH_CURRENCY', { ...currency, countries: [payload] })
           }
         }
       })
     })
-
+    await dispatch('sanitizeCurrencyArray')
+  },
+  async sanitizeCurrencyArray ({ commit, dispatch }) {
     // American Samoa is the first country in the response array and its currency name is incorrectly written in the API.
-    let index = await dispatch('getCurrencyIndexByCurrencyCode', 'USD')
-    commit('SET_CURRENCY_NAME_BY_INDEX', { index, name: 'United States Dollar' })
+    commit('UPDATE_CURRENCY_NAME', { code: 'USD', name: 'United States Dollar' })
 
     // bring main currency country to the front of the currency.countries array
-    await dispatch('rearrangeArray')
+    await dispatch('currencyMainCountryFlag')
 
     // sort currencies
     commit('SORT_CURRENCIES')
-    console.log('here...')
   },
   async updateExchangeRate ({ state, commit, dispatch }) {
     try {
@@ -98,13 +92,11 @@ export default {
       console.log('[ERROR]', err)
     }
   },
-  updateFromCurrency ({ commit, dispatch }, currency) {
+  updateFromCurrency ({ commit }, currency) {
     commit('SET_FROM_CURRENCY', currency)
-    // dispatch('updateExchangeRate')
   },
-  updateToCurrency ({ commit, dispatch }, code) {
+  updateToCurrency ({ commit }, code) {
     commit('SET_TO_CURRENCY', code)
-    // dispatch('updateExchangeRate')
   },
   updateFromCurrencyName ({ state, commit }, code) {
     let currency = state.currencies.filter(currency => currency.code === code)
@@ -144,15 +136,15 @@ export default {
     return country
   },
   /**
-   * Move main flag in front of array for easier handling.
-   * for example: United States flag for USD currencies
+   * Move main country currency flag in front of the array for easier handling.
+   * for example: Use the United States flag to represent all countries that use the USD currency.
    */
-  rearrangeArray ({ state, dispatch, commit }) {
-    state.currencies.map((currency, position) => {
+  currencyMainCountryFlag ({ state, dispatch, commit }) {
+    state.currencies.map((currency, index) => {
       if (currency.countries.length > 1) {
         dispatch('bestMatchIndex', currency).then(countryIndex => {
           if (countryIndex > 0) {
-            commit('SET_CURRENCY_MAIN_COUNTRY', { countries: currency.countries, countryIndex, currencyIndex: position })
+            commit('SET_CURRENCY_MAIN_COUNTRY_FLAG', { countries: currency.countries, countryIndex, currencyIndex: index })
           }
         })
       }

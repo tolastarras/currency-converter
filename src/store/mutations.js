@@ -22,6 +22,9 @@ export default {
   PUSH_CURRENCY (state, currency) {
     state.currencies.push(currency)
   },
+  INSERT_CURRENCY (state, { currency, index }) {
+    state.currencies.splice(index + 1, 0, currency)
+  },
   PUSH_TO_COUNTRIES (state, { index, payload }) {
     state.currencies[index].countries.push(payload)
   },
@@ -32,7 +35,7 @@ export default {
       state.toCurrencyAmount = amount
     }
   },
-  SET_CURRENCY_MAIN_COUNTRY (state, { countries, countryIndex, currencyIndex }) {
+  SET_CURRENCY_MAIN_COUNTRY_FLAG (state, { countries, countryIndex, currencyIndex }) {
     // country to move up to the front of the array
     let country = countries[countryIndex]
 
@@ -44,5 +47,12 @@ export default {
   // Set the currency name of a currency in the currencies array at index currencyIndex
   SET_CURRENCY_NAME_BY_INDEX (state, { index, name }) {
     state.currencies[index].name = name
+  },
+  UPDATE_CURRENCY_NAME (state, { code, name }) {
+    state.currencies.map(currency => {
+      if (currency.code === code) {
+        currency.name = name
+      }
+    })
   }
 }
