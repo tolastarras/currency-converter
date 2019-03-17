@@ -77,6 +77,8 @@ export default {
     commit('SORT_CURRENCIES')
   },
   async updateExchangeRate ({ state, commit, dispatch }) {
+    commit('SET_LOADING', true)
+
     try {
       const baseCode = state.fromCurrency.code.toLowerCase()
       const toCode = state.toCurrency.code.toLowerCase()
@@ -91,6 +93,7 @@ export default {
     } catch (err) {
       console.log('[ERROR]', err)
     }
+    commit('SET_LOADING', false)
   },
   updateFromCurrency ({ commit }, currency) {
     commit('SET_FROM_CURRENCY', currency)

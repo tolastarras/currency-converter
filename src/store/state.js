@@ -1,4 +1,5 @@
 export default {
+  loading: false,
   fromCurrency: {
     // amount, code, countries, flag, name, symbol
     code: 'USD',

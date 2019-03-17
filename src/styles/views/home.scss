@@ -1,17 +1,21 @@
 // <polygon class="svg--sm" fill="#ddd" points="0,0 30,100 65,21 90,100 100,75 100,100 0,100"/>
-.header {
-  background: linear-gradient($primary, $secondary);
-  padding-bottom: 5em;
-  position: relative;
+.main-container {
+  background: $bg_primary;
 
-  hr {
-    margin: 1.3em auto;
-    background: $color5;
-    height: 1px;
-    width: 5em;
+  .header {
+    background: linear-gradient($primary, $secondary);
+    padding-bottom: 5em;
+    position: relative;
+  
+    hr {
+      margin: 1.3em auto;
+      background: $color5;
+      height: 1px;
+      width: 5em;
+    }
   }
-}
-
-.country-list {
-  margin: 4em 0 6em 0;
+  
+  .country-list {
+    margin: 4em 0 6em 0;
+  }
 }

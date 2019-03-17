@@ -17,5 +17,5 @@ TODO:
 2. checkout env.local to build a graph from currency to currency converstion since 1999
 3. feature: allow user to type in custom select box to find currencies
 4. scroll to the selected currency in the dropdown list on select box click
-5. show spinner while loading data
 6. limit the number of request per ip per hour
+7. Two countries accepting the botswana pula; center and make flags bigger to push footer down

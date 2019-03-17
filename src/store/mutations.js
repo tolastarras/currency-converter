@@ -54,5 +54,9 @@ export default {
         currency.name = name
       }
     })
+  },
+  SET_LOADING (state, loading) {
+    console.log('LOADING ...', loading)
+    state.loading = loading
   }
 }

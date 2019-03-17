@@ -1,7 +1,14 @@
 <template>
   <div class="container">
     <h4 class="text-white">1 {{ fromCurrency.name }} equals</h4>
-    <h1>{{ exchangeRate }} {{ toCurrency.name }}</h1>
+    <div v-if="loading">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <div v-else>
+      <h1>{{ exchangeRate }} {{ toCurrency.name }}</h1>
+    </div>
     <p class="text-warning">{{ currentDate }}</p>
   </div>
 </template>
@@ -11,7 +18,7 @@ import { mapState } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['fromCurrency', 'toCurrency', 'exchangeRate']),
+    ...mapState(['fromCurrency', 'toCurrency', 'exchangeRate', 'loading']),
     currentDate () {
       let date = new Date()
 

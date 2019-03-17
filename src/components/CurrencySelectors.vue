@@ -13,7 +13,12 @@
         <custom-select-box :currencyType="toCurrency" />
       </div>
       <div class="col col-12 col-lg-5 mb-1">
-        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrency.amount">
+        <div v-if="loading" class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <div v-else>
+          <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrency.amount">
+        </div>
       </div>
     </div>
   </form>
@@ -56,7 +61,7 @@ export default {
       this.$store.dispatch(method, target.value)
     }
   },
-  computed: mapState(['fromCurrency', 'toCurrency', 'currencies', 'exchangeRate'])
+  computed: mapState(['fromCurrency', 'toCurrency', 'currencies', 'exchangeRate', 'loading'])
 }
 </script>
 
