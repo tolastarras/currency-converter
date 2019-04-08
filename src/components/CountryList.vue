@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <div v-if="currencyCountries.length === 1">
-      <h3 class="mb-5">
+      <h2 class="mb-5">
         {{ format(currencyCountries[0].name) }} is the only country accepting the {{ toCurrency.name }}
-      </h3>
+      </h2>
       <div class="one-country">
         <a :href="wikipediaLink(currencyCountries[0].name)" target="__blank">
           <img :src="currencyCountries[0].flag">
@@ -12,9 +12,9 @@
     </div>
     <!-- v-else generates an error because it triggers prior to currencyCountries being loaded (when its length is zero). -->
     <div v-else-if="currencyCountries.length > 1">
-      <h3 class="mb-4">
+      <h2 class="mb-5">
         There are {{ currencyCountries.length }} Countries accepting the {{ toCurrency.name }}
-      </h3>
+      </h2>
       <ul class="list-inline text-left">
         <li class="list-inline-item col-md-6 col-xl-4" :key="country.name" v-for="country in currencyCountries">
           <a :href="wikipediaLink(country.name)" target="__blank">

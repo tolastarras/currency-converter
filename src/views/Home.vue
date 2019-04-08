@@ -1,7 +1,7 @@
 <template>
   <div class="main-container text-center">
     <div class="header pt-5">
-      <h1 class="text-warning">Currency Converter</h1>
+      <h1 class="text-warning display-4">Currency Converter</h1>
       <hr>
       <div class="pt-4">
         <message-header />
