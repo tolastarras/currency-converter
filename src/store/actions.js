@@ -1,8 +1,13 @@
 import stringSimilarity from 'string-similarity'
 import CurrencyExchange from '@/classes/CurrencyExchangeClass'
+import helper from '@/mixins/helper'
 
 export default {
   async init ({ state, dispatch }) {
+    // get user location & ip
+    const location = await helper.getters.currentLocation()
+    console.log('location', location)
+
     // load currencies from local storage or api
     await dispatch('loadCurrencies')
 

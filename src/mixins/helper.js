@@ -1,3 +1,5 @@
+import LocationService from '@/services/LocationService'
+
 export default {
   methods: {
     formatCountryName (value) {
@@ -15,6 +17,23 @@ export default {
       const year = today.getFullYear()
 
       return year + '-' + month + '-' + day
+    }
+  },
+  getters: {
+    async currentLocation () {
+      const service = await LocationService.fetchData()
+      const data = service.data
+      const location = {
+        ipv4: data.IPv4,
+        city: data.city,
+        country_code: data.country_code,
+        country_name: data.country_name,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        postal: data.postal,
+        state: data.state
+      }
+      return location
     }
   }
 }
