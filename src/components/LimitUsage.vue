@@ -1,17 +1,17 @@
 <template>
   <div class="conversions">
-    <p v-if="limit === 3" class="text-white lead limit">{{ limit }}</p>
+    <p v-if="hasMore" class="text-white lead limit">{{ limit - count }}</p>
     <p v-else class="text-white lead">{{ countdown }}</p>
   </div>
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex'
+
 export default {
-  data () {
-    return {
-       limit: 3,
-       countdown: '09:38'
-    }
+  computed: {
+    ...mapState('conversions', ['count', 'limit']),
+    ...mapGetters('conversions', ['hasMore'])
   }
 }
 </script>
