@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <limit-usage />
     <h4 class="text-white">1 {{ fromCurrency.name }} equals</h4>
     <div v-if="loading">
       <div class="spinner-border" role="status">
@@ -15,8 +16,12 @@
 
 <script>
 import { mapState } from 'vuex'
+import LimitUsage from '@/components/LimitUsage'
 
 export default {
+  components: {
+    LimitUsage
+  },
   computed: {
     ...mapState(['fromCurrency', 'toCurrency', 'exchangeRate', 'loading']),
     currentDate () {

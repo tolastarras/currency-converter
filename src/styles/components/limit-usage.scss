@@ -1,0 +1,21 @@
+.conversions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  p {
+    padding: 0;
+    margin: 0;
+
+    &.limit {
+      background: $color2;
+      height: 2rem;
+      width: 2rem;
+      margin: 0;
+      padding: 0;
+      border-radius: 100%;
+      color: $primary !important;
+      font-weight: bold;
+    }
+  }
+}
