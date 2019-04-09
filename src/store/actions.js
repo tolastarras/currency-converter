@@ -1,5 +1,6 @@
 import stringSimilarity from 'string-similarity'
 import CurrencyExchange from '@/classes/CurrencyExchangeClass'
+import fb from '@/firebase/config'
 import helper from '@/mixins/helper'
 
 export default {
