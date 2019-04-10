@@ -1,12 +1,15 @@
 <template>
   <div class="conversions">
     <p v-if="hasMore" class="text-white lead limit">{{ limit - count }}</p>
-    <p v-else class="text-white lead countdown">{{ $root.formatTime(countdown) }}</p>
+    <p v-else class="text-white lead countdown">
+      <countdown />
+    </p>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import Countdown from './Countdown'
 
 export default {
   data () {
@@ -14,6 +17,9 @@ export default {
       countdown: '',
       counter: 0
     }
+  },
+  components: {
+    Countdown
   },
   watch: {
     count () {
