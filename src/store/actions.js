@@ -1,5 +1,6 @@
 import stringSimilarity from 'string-similarity'
 import CurrencyExchange from '@/classes/CurrencyExchangeClass'
+import CurrencyService from '@/services/CurrencyService'
 // import fb from '@/firebase/config'
 
 export default {
@@ -87,9 +88,7 @@ export default {
       const baseCode = state.fromCurrency.code.toLowerCase()
       const toCode = state.toCurrency.code.toLowerCase()
 
-      const currency = new CurrencyExchange(process.env.VUE_APP_CURRENCIES_API_URL)
-
-      let exchangeRate = await currency.exchangeRate(baseCode, toCode)
+      let exchangeRate = await CurrencyService.exchangeRate(baseCode, toCode)
         .then(response => response.data.rate.toFixed(4))
 
       commit('SET_EXCHANGE_RATE', exchangeRate)

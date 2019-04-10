@@ -35,7 +35,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-@import '@/styles/components/countdown.scss';
-</style>

@@ -1,7 +1,7 @@
 export default {
   namespaced: true,
   state: {
-    count: 3,
+    count: 0,
     limit: 3,
     secondsToWait: '10',
     // timestamp: 1554833728
