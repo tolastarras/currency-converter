@@ -1,6 +1,6 @@
 import stringSimilarity from 'string-similarity'
-import CurrencyExchange from '@/classes/CurrencyExchangeClass'
 import CurrencyService from '@/services/CurrencyService'
+import CountryService from '@/services/CountryService'
 // import fb from '@/firebase/config'
 
 export default {
@@ -49,8 +49,7 @@ export default {
     }
   },
   async loadDataFromApi ({ state, commit, dispatch }) {
-    const currency = new CurrencyExchange(process.env.VUE_APP_COUNTRIES_API_URL)
-    const response = await currency.loadCountriesData()
+    const response = await CountryService.loadCountriesData()
 
     response.data.map(country => {
       country.currencies.map(currency => {
