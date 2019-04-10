@@ -1,13 +1,11 @@
 import stringSimilarity from 'string-similarity'
 import CurrencyExchange from '@/classes/CurrencyExchangeClass'
-import fb from '@/firebase/config'
-import helper from '@/mixins/helper'
+// import fb from '@/firebase/config'
 
 export default {
-  async init ({ state, dispatch }) {
+  async init ({ state, dispatch, rootState }) {
     // get user location & ip
-    const location = await helper.getters.currentLocation()
-    console.log('location', location)
+    // const location = await helper.getters.currentLocation()
 
     // load currencies from local storage or api
     await dispatch('loadCurrencies')

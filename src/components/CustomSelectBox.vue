@@ -18,13 +18,16 @@ export default {
   props: {
     currencyType: Object
   },
-  computed: mapState(['currencies']),
+  computed: {
+    ...mapState(['currencies'])
+  },
   methods: {
     handleClick ({ target }) {
       // method name based on drop box selected
       let method = (this.$root.isFromCurrency(target) ? 'updateFromCurrencyByCode' : 'updateToCurrencyByCode')
 
       this.$store.dispatch(method, target.value)
+      this.$store.dispatch('conversions/incrementCount')
     },
     currencyFlag (currency) {
       // wait for data to load

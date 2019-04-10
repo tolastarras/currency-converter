@@ -1,4 +1,5 @@
 import LocationService from '@/services/LocationService'
+import moment from 'moment'
 
 export default {
   methods: {
@@ -17,6 +18,12 @@ export default {
       const year = today.getFullYear()
 
       return year + '-' + month + '-' + day
+    },
+    timestamp () {
+      return moment().unix()
+    },
+    formatTime (seconds) {
+      return moment(seconds, 'ss').format('m:ss')
     }
   },
   getters: {
