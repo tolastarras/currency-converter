@@ -10,12 +10,11 @@ export default {
   mutations: {
     INCREMENT_COUNT (state) {
       state.count++
+      console.log('incr: count', state.count)
     },
     DECREMENT_COUNT (state) {
       state.count--
-    },
-    RESET_COUNT (state) {
-      state.count = 0
+      console.log('decr: count', state.count)
     },
     SET_TIMESTAMP (state, timestamp) {
       state.timestamp = timestamp
@@ -30,9 +29,6 @@ export default {
     },
     setTimestamp ({ commit }, timestamp) {
       commit('SET_TIMESTAMP', timestamp)
-    },
-    resetCount ({ commit }) {
-      commit('RESET_COUNT')
     }
   },
   getters: {

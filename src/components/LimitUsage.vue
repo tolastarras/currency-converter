@@ -11,22 +11,28 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      countdown: ''
+      countdown: '',
+      counter: 0
     }
   },
-  created () {
-    if (this.count > 0) {
-      const secondsEllapsed = 0
-      // this.countdown = this.$root.tickTock(this.secondsToWait - secondsEllapsed)
-      this.countdown = this.secondsToWait - secondsEllapsed - 1
-      this.startCountdown()
+  watch: {
+    count () {
+      console.log('watch...')
+      console.log('count', this.count)
+      console.log('counter', this.counter)
+      if (this.count > 0) {
+        const secondsEllapsed = 0
+        this.countdown = this.secondsToWait - secondsEllapsed - 1
+        this.startCountdown()
+      }
     }
   },
   methods: {
     startCountdown () {
+      this.counter++
       let timer = setInterval(() => {
         this.countdown--
-        console.log(this.countdown)
+        console.log('start countdown: ' + this.countdown)
 
         if (this.countdown < 1) {
           clearInterval(timer)

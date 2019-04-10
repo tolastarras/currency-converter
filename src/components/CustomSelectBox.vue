@@ -19,15 +19,20 @@ export default {
     currencyType: Object
   },
   computed: {
-    ...mapState(['currencies'])
+    ...mapState(['currencies']),
+    ...mapState('conversions', ['count', 'limit'])
   },
   methods: {
     handleClick ({ target }) {
       // method name based on drop box selected
       let method = (this.$root.isFromCurrency(target) ? 'updateFromCurrencyByCode' : 'updateToCurrencyByCode')
-
       this.$store.dispatch(method, target.value)
-      this.$store.dispatch('conversions/incrementCount')
+
+      console.log('count', this.count)
+      console.log('limit', this.limit)
+      if (this.count < this.limit) {
+        this.$store.dispatch('conversions/incrementCount')
+      }
     },
     currencyFlag (currency) {
       // wait for data to load
