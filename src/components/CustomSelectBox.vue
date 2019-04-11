@@ -1,9 +1,9 @@
 <template>
   <div class="dropdown">
-    <button class="btn btn-select" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button class="btn btn-select" type="button" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" :disabled="isDisabled">
       <img :src="currencyFlag(currencyType)"> {{ currencyType.name }} <span>{{ currencyType.code }} <i class="fa fa-caret-down"></i></span>
     </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+    <div class="dropdown-menu" aria-labelledby="dropdownMenu">
       <button @click="handleClick" class="dropdown-item" type="button" v-for="currency in currencies" :key="currency.code" :value="currency.code" :class="currency.code === currencyType.code ? 'selected' : ''">
         <img :src="currencyFlag(currency)">{{ currency.name }}<span>{{ currency.code }}</span>
       </button>
@@ -16,7 +16,11 @@ import { mapState } from 'vuex'
 
 export default {
   props: {
-    currencyType: Object
+    currencyType: Object,
+    isDisabled: Boolean
+  },
+  mounted () {
+    console.log('xxx', this.readOnly)
   },
   computed: {
     ...mapState(['currencies']),
@@ -28,8 +32,6 @@ export default {
       let method = (this.$root.isFromCurrency(target) ? 'updateFromCurrencyByCode' : 'updateToCurrencyByCode')
       this.$store.dispatch(method, target.value)
 
-      console.log('count', this.count)
-      console.log('limit', this.limit)
       if (this.count < this.limit) {
         this.$store.dispatch('conversions/incrementCount')
       }

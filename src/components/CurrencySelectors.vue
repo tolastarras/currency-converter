@@ -2,22 +2,22 @@
   <form class="mt-4">
     <div class="from-currency-js form-row mb-2">
       <div class="col col-12 col-lg-7 mb-1">
-        <custom-select-box :currencyType="fromCurrency" />
+        <custom-select-box :currencyType="fromCurrency" :isDisabled="readOnly" />
       </div>
       <div class="col col-12 col-lg-5 mb-1">
-        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrency.amount">
+        <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="fromCurrency.amount" :readonly="readOnly">
       </div>
     </div>
     <div class="to-currency-js form-row">
       <div class="col col-12 col-lg-7 mb-1">
-        <custom-select-box :currencyType="toCurrency" />
+        <custom-select-box :currencyType="toCurrency" :isDisabled="readOnly" />
       </div>
       <div class="col col-12 col-lg-5 mb-1">
         <div v-if="loading" class="spinner-border" role="status">
           <span class="sr-only">Loading...</span>
         </div>
         <div v-else>
-          <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrency.amount">
+          <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrency.amount" :readonly="readOnly">
         </div>
       </div>
     </div>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import CustomSelectBox from '@/components/CustomSelectBox'
 
 export default {
@@ -61,7 +61,13 @@ export default {
       this.$store.dispatch(method, target.value)
     }
   },
-  computed: mapState(['fromCurrency', 'toCurrency', 'currencies', 'exchangeRate', 'loading'])
+  computed: {
+    ...mapState(['fromCurrency', 'toCurrency', 'currencies', 'exchangeRate', 'loading']),
+    ...mapGetters('conversions', ['hasMore']),
+    readOnly () {
+      return !this.hasMore
+    }
+  }
 }
 </script>
 

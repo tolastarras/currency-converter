@@ -22,16 +22,13 @@ export default {
     Countdown
   },
   watch: {
-    count () {
-      console.log('watch...')
-      console.log('count', this.count)
-      console.log('counter', this.counter)
-      if (this.count > 0) {
-        const secondsEllapsed = 0
-        this.countdown = this.secondsToWait - secondsEllapsed - 1
-        this.startCountdown()
-      }
-    }
+    // count () {
+    //   if (this.count > 0) {
+    //     const secondsEllapsed = 0
+    //     this.countdown = this.secondsToWait - secondsEllapsed - 1
+    //     this.startCountdown()
+    //   }
+    // }
   },
   methods: {
     startCountdown () {

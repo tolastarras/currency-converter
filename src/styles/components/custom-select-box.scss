@@ -1,42 +1,58 @@
-span {
-  font-family: monospace;
-  font-size: 1.2em;
-  font-weight: bold;
-  float: right;
-}
+.dropdown {
 
-button {
-  font-size: 1.1em;
-  padding-left: .7em;
-  background: $color2;
-  line-height: 24px;
+  button {
+    font-size: 1.1em;
+    padding-left: .7em;
+    background: $color2;
+    line-height: 24px;
+  
+    > img {
+      height: 20px;
+      width: 30px;
+      margin-top: -6px;
+      margin-right: 10px;
+    }
+  
+    span {
+      font-family: monospace;
+      font-size: 1.2em;
+      font-weight: bold;
+      float: right;
 
-  > img {
-    height: 20px;
-    width: 30px;
-    margin-top: -6px;
-    margin-right: 10px;
+      > i {
+        vertical-align: bottom !important;
+      }
+    }
+
+    &:disabled {
+      color: $color3;
+      background: white !important;
+
+      &:hover {
+        cursor: not-allowed;
+      }
+
+      > img {
+        filter: grayscale(100%);
+      }
+    }
   }
 
-  span > i {
-    vertical-align: bottom !important;
+  > .btn-select {
+    border: 1px solid $color3;
+    text-align: left;
+    padding-left: .7em;
+    width: 100%;
   }
-}
 
-.btn-select {
-  border: 1px solid $color3;
-  text-align: left;
-  padding-left: .7em;
-  width: 100%;
-}
-
-.dropdown-menu {
-  height: 30vh;
-  width: 100%;
-  overflow-y: scroll;
-
-  > button:hover, .selected {
-    background: $color6;
-    color: $color2;
+  .dropdown-menu {
+    height: 30vh;
+    width: 100%;
+    overflow-y: scroll;
+  
+    > button:hover, .selected {
+      background: $color6;
+      color: $color2;
+    }
   }
 }

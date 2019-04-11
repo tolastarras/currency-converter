@@ -4,7 +4,6 @@ export default {
     count: 0,
     limit: 3,
     secondsToWait: '10',
-    // timestamp: 1554833728
     timestamp: 1554842457
   },
   mutations: {
