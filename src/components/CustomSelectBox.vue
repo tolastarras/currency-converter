@@ -19,9 +19,6 @@ export default {
     currencyType: Object,
     isDisabled: Boolean
   },
-  mounted () {
-    console.log('xxx', this.readOnly)
-  },
   computed: {
     ...mapState(['currencies']),
     ...mapState('conversions', ['count', 'limit'])

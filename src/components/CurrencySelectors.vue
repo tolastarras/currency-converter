@@ -13,8 +13,8 @@
         <custom-select-box :currencyType="toCurrency" :isDisabled="readOnly" />
       </div>
       <div class="col col-12 col-lg-5 mb-1">
-        <div v-if="loading" class="spinner-border" role="status">
-          <span class="sr-only">Loading...</span>
+        <div v-if="loading" class="text-input">
+          <spinner />
         </div>
         <div v-else>
           <input @keypress="handleKeyPress" @input="handleInputChange" type="text" class="form-control" placeholder="Amount" :value="toCurrency.amount" :readonly="readOnly">
@@ -27,10 +27,12 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import CustomSelectBox from '@/components/CustomSelectBox'
+import Spinner from '@/components/Spinner'
 
 export default {
   components: {
-    CustomSelectBox
+    CustomSelectBox,
+    Spinner
   },
   methods: {
     ...mapActions(['updateFromCurrencyAmount', 'updateToCurrencyAmount']),

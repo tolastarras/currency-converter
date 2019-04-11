@@ -14,7 +14,7 @@ export default {
     }
   },
   created () {
-    // this.tickTock()
+    this.tickTock()
   },
   methods: {
     tickTock () {
