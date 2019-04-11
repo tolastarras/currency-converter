@@ -18,3 +18,4 @@ TODO:
 4. scroll to the selected currency in the dropdown list on select box click
 6. limit the number of request per ip per hour - show countdown when limit is reached
 7. Two countries accepting the botswana pula; center and make flags bigger to push footer down
+8. Make flags bigger when there are only 2 countries (algerian dinar)

@@ -2,10 +2,8 @@
   <div class="container">
     <limit-usage />
     <h4 class="text-white">1 {{ fromCurrency.name }} equals</h4>
-    <div v-if="loading">
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
+    <div v-if="loading" class="py-2">
+      <spinner />
     </div>
     <div v-else>
       <h1>{{ exchangeRate }} {{ toCurrency.name }}</h1>
@@ -17,10 +15,12 @@
 <script>
 import { mapState } from 'vuex'
 import LimitUsage from '@/components/LimitUsage'
+import Spinner from '@/components/Spinner'
 
 export default {
   components: {
-    LimitUsage
+    LimitUsage,
+    Spinner
   },
   computed: {
     ...mapState(['fromCurrency', 'toCurrency', 'exchangeRate', 'loading']),
